@@ -41,4 +41,12 @@ class TestGrid : IGrid {
     public void RemoveContainerAt(IGridContainer container) {
         throw new NotImplementedException();
     }
+
+    public void AddPort(IPort port) {
+        throw new NotImplementedException();
+    }
+
+    public void Reset() {
+        throw new NotImplementedException();
+    }
 }

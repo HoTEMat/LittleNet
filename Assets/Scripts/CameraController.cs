@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(GridHolder))]
-public class CameraController : MonoBehaviour
+class CameraController : MonoBehaviour
 {
     public Camera Camera;
     private GridHolder gridHolder;
