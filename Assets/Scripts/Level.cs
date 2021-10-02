@@ -19,17 +19,19 @@ class InputPort : IPort {
 
 class Level : ILevel {
     private IPort[] OutputPorts;
+
+    private int iteration = 0;
     
     public Level(ILevelValidator validator, int width, int height) {
-        // TODO: when Grid is implemented, do something like this
-        // Grid grid = new Grid(Width, Height);
+        Validator = validator;
+        Grid = new Grid(width, height);
 
         // create evenly spaced input ports
         int inputSpacing = height / (Validator.InputCount + 1);
         for (int i = 0; i < Validator.InputCount; i++)
             Grid.AddPort(new InputPort(0, i * inputSpacing, Validator, i));
 
-        List<IPort> OutputPortsList = new List<IPort>();
+        List<IPort> outputPortsList = new List<IPort>();
         
         // create evenly spaced output ports (that are just normal ports)
         int outputSpacing = height / (Validator.OutputCount + 1);
@@ -37,7 +39,7 @@ class Level : ILevel {
             var Port = new Port(Grid, width - 1, i * inputSpacing);
                 
             Grid.AddPort(Port);
-            OutputPortsList.Add(Port);
+            outputPortsList.Add(Port);
         }
     }
 
@@ -50,10 +52,19 @@ class Level : ILevel {
         
         Validator.MoveToNextInputState();
 
-        List<State> OutputStatesList = new List<State>();
+        List<State> outputStatesList = new List<State>();
         foreach (var t in OutputPorts)
-            OutputStatesList.Add(t.GetState());
+            outputStatesList.Add(t.GetState());
 
-        return Validator.ValidateStates(OutputStatesList.ToArray());
+        return Validator.ValidateStates(outputStatesList.ToArray());
+    }
+
+    public int GetIteration => iteration;
+    
+    public void Reset() {
+        iteration = 0;
+        
+        // TODO: propagate to grid
+        Validator.Reset();
     }
 }

@@ -12,4 +12,7 @@ public class HappyValidator : ILevelValidator {
 
     public void MoveToNextInputState() {
     }
+
+    public void Reset() {
+    }
 }

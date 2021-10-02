@@ -48,19 +48,19 @@ interface IGrid {
 
     void InsertContainer(IGridContainer container);
 
-    // Returns null when no container is found.
     IGridContainer GetContainerAt(int x, int y);
 
     void RemoveContainerAt(IGridContainer container);
 
     List<IGridContainer> GetContainers();
 
-    // Is called on the outermost container.
     void DoIteration();
     void DoSwap();
 
     int Width { get; }
     int Height { get; }
+
+    void Reset();
 }
 
 interface IGridContainer {
@@ -95,6 +95,8 @@ interface ILevelValidator {
     State[] GetInputStates();
 
     void MoveToNextInputState();
+
+    void Reset();
 }
 
 interface ILevel {
@@ -102,6 +104,10 @@ interface ILevel {
     ILevelValidator Validator { get; }
 
     ILevelState DoIteration();
+    
+    int GetIteration { get; }
+
+    void Reset();
 }
 
 public class Interfaces : MonoBehaviour {
