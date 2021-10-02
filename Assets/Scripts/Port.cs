@@ -1,4 +1,3 @@
-
 using System.Diagnostics;
 using System.Linq;
 
@@ -23,15 +22,14 @@ class Port : IPort {
     }
 
     public State[] GetNeighbors(IGrid parentGrid) {
-
         int i = 0;
         int gridWidth = Grid.Width;
         int gridHeight = Grid.Height;
 
-        State[] neighbors = new State[5];
+        State[] neighbors = new State[4];
 
         // walk neighbors
-        (int x, int y)[] offsets = new[] { (-1, 0), (1, 0), (-1, 0), (1, 0) };
+        (int x, int y)[] offsets = {(0, -1), (0, 1), (-1, 0), (1, 0)};
         foreach (var offset in offsets) {
             int x = InnerX + offset.x;
             int y = InnerY + offset.y;
@@ -40,14 +38,14 @@ class Port : IPort {
 
             if (isInside) {
                 neighbors[i] = Grid.Get(x, y);
-            } else {
+            }
+            else {
                 // TODO: rotations
                 neighbors[i] = parentGrid.Get(OuterX + offset.x, OuterY + offset.y);
             }
+
             i++;
         }
-
-        neighbors[4] = GetState();
 
         return neighbors;
     }
@@ -57,6 +55,4 @@ class Port : IPort {
 
     public int OuterX { get; }
     public int OuterY { get; }
-
-
 }
