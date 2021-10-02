@@ -1,8 +1,8 @@
-
-class Port : IPort {
+﻿
+class OutputPort : IPort {
     private IGrid Grid;
 
-    public Port(IGrid grid, int x, int y) {
+    public OutputPort(IGrid grid, int x, int y) {
         Grid = grid;
 
         InnerX = x;
