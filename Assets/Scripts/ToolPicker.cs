@@ -13,21 +13,29 @@ class ToolPicker : MonoBehaviour {
 
     private List<Button> buttonPositions = new List<Button>();
 
-    private int buttonSpacing = 15;
+    private int buttonSpacing = 8;
     private int buttonCount;
     private float buttonSize;
 
     private void Start() {
         int buttonNum = 0;
-        buttonCount = Enum.GetValues(typeof(State)).Length;
         buttonSize = buttonPrefab.GetComponent<RectTransform>().rect.width;
+        
+        buttonCount = 0;
+        foreach (State state in Enum.GetValues(typeof(State))) {
+            if (state.IsPlaceable())
+                buttonCount += 1;
+        }
 
         float totalWidth = buttonSpacing * (buttonCount - 1) +
                            buttonSize * buttonCount;
 
         float leftOffset = (camera.scaledPixelWidth - totalWidth) / 2;
-        
+
         foreach (State state in Enum.GetValues(typeof(State))) {
+            if (!state.IsPlaceable())
+                continue;
+            
             Button button = Instantiate(buttonPrefab, transform);
             button.onClick.AddListener(() => HandleStateSelected(state));
 
