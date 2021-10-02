@@ -12,6 +12,8 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     public ToolPicker ToolPicker;
     public EventSystem EventSystem;
 
+    public bool ShowTileTextures { get; set; }
+
     [SerializeField]
     private float gridLineWidth = 0.01f;
 
@@ -24,8 +26,8 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         public State State;
         public Sprite Color;
     }
-    public StateToSpriteItem[] StateToSpriteArray;
-    private IReadOnlyDictionary<State, Sprite> StateToSprite;
+    [SerializeField] private StateToSpriteItem[] StateToSpriteArray;
+    public IReadOnlyDictionary<State, Sprite> StateToSprite;
     public void OnBeforeSerialize() {
         // Do nothing.
     }
@@ -56,7 +58,6 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     private void InitGrid(SimulationGrid grid) {
         gridTiles = new GridTile[grid.Width, grid.Height];
         InitGridTiles();
-        UpdateGridTiles();
     }
 
     private void InitGridTiles() {
@@ -80,8 +81,11 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
             for (int gridY = 0; gridY < level.Grid.Height; gridY++) {
                 State state = level.Grid.Get(gridX, gridY);
                 GridTile tile = gridTiles[gridX, gridY];
-                //tile.ShowColor(state);
-                tile.ShowSprite(StateToSprite[state]);
+                if (ShowTileTextures) {
+                    tile.ShowSprite(StateToSprite[state]);
+                } else {
+                    tile.ShowColor(state);
+                }
             }
         }
     }

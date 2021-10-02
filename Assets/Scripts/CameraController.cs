@@ -31,6 +31,8 @@ class CameraController : MonoBehaviour
 
         HandleDragging();
         HandleZooming();
+
+        gridHolder.ShowTileTextures = Camera.orthographicSize < 16;
     }
 
     private void HandleZooming() {
@@ -42,7 +44,7 @@ class CameraController : MonoBehaviour
         float zoomAmount = scrollDelta > 0 ? (1 / mouseScrollSpeed) : mouseScrollSpeed;
 
         var currentWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);
-        Camera.orthographicSize = Mathf.Max(0.1f, Camera.orthographicSize * zoomAmount);
+        Camera.orthographicSize = Mathf.Max(2f, Camera.orthographicSize * zoomAmount);
         var newWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);
         Camera.transform.position += currentWorldCenter - newWorldCenter;
     }

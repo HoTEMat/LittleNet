@@ -51,8 +51,8 @@ class GridTile : MonoBehaviour {
     }
 
     public void ShowSprite(Sprite sprite) {
-        Debug.Log(sprite);
         spriteRenderer.sprite = sprite;
+        spriteRenderer.color = Color.white;
     }
 
     private void OnMouseDown() {
