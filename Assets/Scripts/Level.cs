@@ -12,14 +12,14 @@ class Level : ILevel {
 
         // create evenly spaced input ports
         int inputSpacing = height / (Validator.InputCount + 1);
-        for (int i = 0; i < Validator.InputCount; i++)
-            Grid.AddPort(new InputPort(0, i * inputSpacing, Validator, i));
+        for (int i = 1; i <= Validator.InputCount; i++)
+            Grid.AddPort(new InputPort(0, i * inputSpacing, Validator, i - 1));
 
         List<IPort> outputPortsList = new List<IPort>();
 
         // create evenly spaced output ports
         int outputSpacing = height / (Validator.OutputCount + 1);
-        for (int i = 0; i < Validator.InputCount; i++) {
+        for (int i = 1; i <= Validator.InputCount; i++) {
             var port = new OutputPort(Grid, width - 1, i * outputSpacing);
 
             Grid.AddPort(port);

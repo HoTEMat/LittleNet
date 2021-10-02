@@ -21,7 +21,7 @@ class NotValidator : ILevelValidator {
     public int InitialSwaps;
     public int RemainingSwaps = 4;
 
-    public bool previousOutputState = true;
+    public bool previousOutputState = false;
     public bool currentInputState = false;
 
     public ILevelState ValidateStates(State[] states) {

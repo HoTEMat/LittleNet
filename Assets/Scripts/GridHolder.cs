@@ -11,11 +11,14 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     public GameObject GridLinePrefab;
     public ToolPicker ToolPicker;
     public EventSystem EventSystem;
-
+    
     public bool ShowTileTextures { get; set; }
 
     [SerializeField]
     private float gridLineWidth = 0.01f;
+
+    public GameObject GridBackgroundPrefab;
+    private List<GameObject> gridBackgrounds = new List<GameObject>();
 
     public ILevel Level { get; private set; }
     private GridTile[,] gridTiles;
@@ -72,6 +75,20 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
                 tile.OnClicked += clickHandler;
                 tile.OnMouseInside += mouseOverTileHandler;
                 gridTiles[gridX, gridY] = tile;
+
+                IPort port = Level.Grid.GetPortAt(tile.X, tile.Y);
+                if (port != null)
+                {
+                    var background = Instantiate(GridBackgroundPrefab, transform);
+                    var position = background.GetComponent<RectTransform>();
+
+                    position.transform.position = tile.transform.position;
+                    
+                    float c = 1.15f;
+                    position.localScale = new Vector3(c, c, c);
+                    
+                    gridBackgrounds.Add(background);
+                }
             }
         }
     }

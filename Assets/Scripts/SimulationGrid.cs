@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 class SimulationGrid : ICloneable<SimulationGrid> {
     private IAutomaton automaton = new WireeAutomaton();
@@ -60,6 +61,8 @@ class SimulationGrid : ICloneable<SimulationGrid> {
     }
 
     public IEnumerable<IPort> GetPorts() => ports.Values;
+
+    public IPort GetPortAt(int x, int y) => ports.TryGetValue((x, y), out IPort port) ? port : null;
 
     public void AddPort(IPort port) {
         ports[(port.InnerX, port.InnerY)] = port;
