@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum State {
+public enum State {
     Nothing,
     WireOn,
     WireDead,
@@ -23,7 +23,7 @@ enum State {
     CrossHOffVDead
 }
 
-enum Rotation {
+public enum Rotation {
     By0,
     By90,
     By180,
@@ -78,16 +78,21 @@ interface IAutomaton {
     State NextState(State up, State down, State left, State right, State center);
 }
 
-enum ILevelState {
+public enum ILevelState {
     Nothing,
     Success,
     Failure
 }
 
 interface ILevelValidator {
+    int InputCount { get; }
+    int OutputCount { get; }
+    
     ILevelState ValidateStates(State[] states);
 
     State[] GetInputStates();
+
+    void MoveToNextInputState();
 }
 
 interface ILevel {
