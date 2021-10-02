@@ -24,7 +24,7 @@ class Level : ILevel {
     
     public Level(ILevelValidator validator, int width, int height) {
         Validator = validator;
-        Grid = new Grid(width, height);
+        Grid = new SimulationGrid(width, height);
 
         // create evenly spaced input ports
         int inputSpacing = height / (Validator.InputCount + 1);

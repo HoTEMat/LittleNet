@@ -19,7 +19,7 @@ class GridHolder : MonoBehaviour {
     };
 
     private void Start() {
-        SetGrid(new TestGrid());
+        SetGrid(new SimulationGrid(30, 30));
     }
 
     private void Update() {
@@ -33,6 +33,7 @@ class GridHolder : MonoBehaviour {
     }
 
     private void InitGridTiles() {
+        Debug.Log("init");
         var clickHandler = new Action<GridTile>(HandleTileClicked);
         for (int gridX = 0; gridX < grid.Width; gridX++) {
             for (int gridY = 0; gridY < grid.Height; gridY++) {
@@ -41,6 +42,7 @@ class GridHolder : MonoBehaviour {
                 tile.Y = gridY;
                 tile.SetTopLeft(GridPositionToPosition(gridX, gridY, 0));
                 tile.OnClicked += clickHandler;
+                tile.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
                 gridTiles[gridX, gridY] = tile;
             }
         }

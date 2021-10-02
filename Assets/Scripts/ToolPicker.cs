@@ -10,8 +10,6 @@ class ToolPicker : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W)) {
             CurrentTool = UITool.PlaceWire;
-        } else {
-            CurrentTool = UITool.None;
         }
     }
 }
