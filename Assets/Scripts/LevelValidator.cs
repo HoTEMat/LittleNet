@@ -1,5 +1,4 @@
-public class HappyValidator : ILevelValidator
-{
+public class HappyValidator : ILevelValidator {
     public int InputCount => 1;
     public int OutputCount => 1;
 
@@ -11,5 +10,6 @@ public class HappyValidator : ILevelValidator
         return new[] {State.WireOn};
     }
 
-    public void MoveToNextInputState() { }
+    public void MoveToNextInputState() {
+    }
 }
