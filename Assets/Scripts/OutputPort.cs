@@ -1,6 +1,31 @@
-﻿
-class OutputPort : IPort {
+﻿class OutputPort : IPort {
     private IGrid Grid;
+
+    public State[] GetNeighbors() {
+        int i = 0;
+        int gridWidth = Grid.Width;
+        int gridHeight = Grid.Height;
+
+        State[] neighbors = new State[5];
+
+        // walk neighbors
+        (int x, int y)[] offsets = {(-1, 0), (1, 0), (-1, 0), (1, 0)};
+        foreach (var offset in offsets) {
+            int x = InnerX + offset.x;
+            int y = InnerY + offset.y;
+
+            bool isInside = x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
+
+            if (isInside)
+                neighbors[i] = Grid.Get(x, y);
+
+            i++;
+        }
+
+        neighbors[4] = GetState();
+
+        return neighbors;
+    }
 
     public OutputPort(IGrid grid, int x, int y) {
         Grid = grid;

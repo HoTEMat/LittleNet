@@ -3,8 +3,8 @@ using System.Collections.Generic;
 class Level : ILevel {
     private IPort[] OutputPorts;
 
-    private int iteration = 0;
-    
+    private int iteration;
+
     public Level(ILevelValidator validator, int width, int height) {
         Validator = validator;
         Grid = new SimulationGrid(width, height);
@@ -15,12 +15,12 @@ class Level : ILevel {
             Grid.AddPort(new InputPort(0, i * inputSpacing, Validator, i));
 
         List<IPort> outputPortsList = new List<IPort>();
-        
+
         // create evenly spaced output ports (that are just normal ports)
         int outputSpacing = height / (Validator.OutputCount + 1);
         for (int i = 0; i < Validator.InputCount; i++) {
             var port = new OutputPort(Grid, width - 1, i * inputSpacing);
-                
+
             Grid.AddPort(port);
             outputPortsList.Add(port);
         }
@@ -29,10 +29,11 @@ class Level : ILevel {
     public IGrid Grid { get; }
 
     public ILevelValidator Validator { get; }
+
     public ILevelState DoIteration() {
         Grid.DoIteration();
         Grid.DoSwap();
-        
+
         Validator.MoveToNextInputState();
 
         List<State> outputStatesList = new List<State>();
@@ -43,10 +44,10 @@ class Level : ILevel {
     }
 
     public int GetIteration => iteration;
-    
+
     public void Reset() {
         iteration = 0;
-        
+
         Grid.Reset();
         Validator.Reset();
     }
