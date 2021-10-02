@@ -1,7 +1,7 @@
 static partial class Levels {
     public static Level NotLevel() {
 
-        var validator = new HappyValidator();
+        var validator = new NotValidator();
         int size = 10;
 
         var level = new Level(validator, size, size);
@@ -9,11 +9,17 @@ static partial class Levels {
     }
 }
 
-class NotLevelValidator : ILevelValidator {
+class NotValidator : ILevelValidator {
+
+    public NotValidator(int initialSwaps = 4) {
+        InitialSwaps = initialSwaps;
+    }
+    
     public int InputCount => 1;
     public int OutputCount => 1;
 
-    public int remainingSwaps = 4;
+    public int InitialSwaps;
+    public int RemainingSwaps = 4;
 
     public bool previousOutputState = true;
     public bool currentInputState = false;
@@ -21,7 +27,7 @@ class NotLevelValidator : ILevelValidator {
     public ILevelState ValidateStates(State[] states) {
         previousOutputState = states[0] == State.WireOn;
 
-        if (remainingSwaps == 0 && previousOutputState != currentInputState)
+        if (RemainingSwaps == 0 && previousOutputState != currentInputState)
             return ILevelState.Success;
         
         return ILevelState.Nothing;
@@ -30,10 +36,13 @@ class NotLevelValidator : ILevelValidator {
     public State[] GetInputStates() => new[] { currentInputState ? State.WireOn : State.WireOff };
 
     public void MoveToNextInputState() {
-        if (previousOutputState == currentInputState)
-            
+        if (previousOutputState == currentInputState) {
+            RemainingSwaps -= 1;
+            currentInputState = !currentInputState;
+        }
     }
 
     public void Reset() {
+        RemainingSwaps = InitialSwaps;
     }
 }
