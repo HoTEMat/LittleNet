@@ -1,22 +1,5 @@
 using System.Collections.Generic;
 
-class InputPort : IPort {
-    public InputPort(int x, int y, ILevelValidator validator, int portPosition) {
-        Validator = validator;
-        PortPosition = portPosition;
-        InnerX = x;
-        InnerY = y;
-    }
-
-    public int InnerX { get; }
-    public int InnerY { get; }
-
-    private ILevelValidator Validator { get; }
-    private int PortPosition { get; }
-
-    public State GetState() => Validator.GetInputStates()[PortPosition];
-}
-
 class Level : ILevel {
     private IPort[] OutputPorts;
 
@@ -36,10 +19,10 @@ class Level : ILevel {
         // create evenly spaced output ports (that are just normal ports)
         int outputSpacing = height / (Validator.OutputCount + 1);
         for (int i = 0; i < Validator.InputCount; i++) {
-            var Port = new Port(Grid, width - 1, i * inputSpacing);
+            var port = new OutputPort(Grid, width - 1, i * inputSpacing);
                 
-            Grid.AddPort(Port);
-            outputPortsList.Add(Port);
+            Grid.AddPort(port);
+            outputPortsList.Add(port);
         }
     }
 
@@ -64,7 +47,7 @@ class Level : ILevel {
     public void Reset() {
         iteration = 0;
         
-        // TODO: propagate to grid
+        Grid.Reset();
         Validator.Reset();
     }
 }
