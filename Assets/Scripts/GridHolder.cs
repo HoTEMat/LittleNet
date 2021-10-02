@@ -15,7 +15,24 @@ class GridHolder : MonoBehaviour {
 
     public static readonly IReadOnlyDictionary<State, Color> stateToColor = new Dictionary<State, Color> {
         { State.Nothing, Color.black },
-        { State.WireOff, Color.red }
+        { State.WireOff, Color.red },
+        { State.WireDead, Color.gray },
+        { State.WireOff, new Color(.5f,0,0) },
+        { State.LampOn, new Color(1,1,.5f) },
+        { State.LampDead, new Color(.5f, .5f, .2f) },
+        { State.LampOff, new Color(.5f, .5f, 0) },
+        { State.NotOn, new Color(0,1,0) },
+        { State.NotDead, new Color(.3f, .7f, .3f) },
+        { State.NotOff, new Color(0,.5f,0) },
+        { State.CrossHOnVOn, new Color(1,0,1) },
+        { State.CrossHOnVOff, new Color(1,0,1) },
+        { State.CrossHOffVOn, new Color(1,0,1) },
+        { State.CrossHOffVOff, new Color(1,0,1) },
+        { State.CrossHDeadVOn, new Color(1,0,1) },
+        { State.CrossHOnVDead, new Color(1,0,1) },
+        { State.CrossHDeadVDead, new Color(1,0,1) },
+        { State.CrossHDeadVOff, new Color(1,0,1) },
+        { State.CrossHOffVDead, new Color(1,0,1) },
     };
 
     private void Start() {
