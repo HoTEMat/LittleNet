@@ -51,6 +51,7 @@ class GridTile : MonoBehaviour {
     }
 
     public void ShowSprite(Sprite sprite) {
+        Debug.Log(sprite);
         spriteRenderer.sprite = sprite;
     }
 

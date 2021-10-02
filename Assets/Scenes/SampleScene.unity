@@ -158,6 +158,45 @@ MonoBehaviour:
   ToolPicker: {fileID: 858196696}
   EventSystem: {fileID: 192349364}
   gridLineWidth: 0.05
+  StateToSpriteArray:
+  - State: 0
+    Color: {fileID: -3911179752225044287, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
+  - State: 1
+    Color: {fileID: -6639906334958310984, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
+  - State: 2
+    Color: {fileID: 0}
+  - State: 3
+    Color: {fileID: 0}
+  - State: 4
+    Color: {fileID: 0}
+  - State: 5
+    Color: {fileID: 0}
+  - State: 6
+    Color: {fileID: 0}
+  - State: 7
+    Color: {fileID: 0}
+  - State: 8
+    Color: {fileID: 0}
+  - State: 9
+    Color: {fileID: 0}
+  - State: 10
+    Color: {fileID: 0}
+  - State: 11
+    Color: {fileID: 0}
+  - State: 12
+    Color: {fileID: 0}
+  - State: 13
+    Color: {fileID: 0}
+  - State: 14
+    Color: {fileID: 0}
+  - State: 15
+    Color: {fileID: 0}
+  - State: 16
+    Color: {fileID: 0}
+  - State: 17
+    Color: {fileID: 0}
+  - State: 18
+    Color: {fileID: 0}
 --- !u!4 &53124909
 Transform:
   m_ObjectHideFlags: 0

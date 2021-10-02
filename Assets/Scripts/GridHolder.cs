@@ -55,6 +55,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     private void InitGrid(SimulationGrid grid) {
         gridTiles = new GridTile[grid.Width, grid.Height];
         InitGridTiles();
+        UpdateGridTiles();
     }
 
     private void InitGridTiles() {
