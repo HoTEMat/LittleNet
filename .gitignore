@@ -1,3 +1,9 @@
+.idea
+
+/Packages/manifest.json
+/Packages/packages-lock.json
+/ProjectSettings/ProjectVersion.txt
+
 # Vim-specific
 *~
 *.swp
