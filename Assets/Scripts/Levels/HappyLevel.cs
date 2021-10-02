@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 static partial class Levels {
     public static Level HappyLevel() {
 
@@ -10,5 +6,24 @@ static partial class Levels {
 
         var level = new Level(validator, size, size);
         return level;
+    }
+}
+
+class HappyValidator : ILevelValidator {
+    public int InputCount => 1;
+    public int OutputCount => 1;
+
+    public ILevelState ValidateStates(State[] states) {
+        return ILevelState.Nothing;
+    }
+
+    public State[] GetInputStates() {
+        return new[] {State.WireOn};
+    }
+
+    public void MoveToNextInputState() {
+    }
+
+    public void Reset() {
     }
 }
