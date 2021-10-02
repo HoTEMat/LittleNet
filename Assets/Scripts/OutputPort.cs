@@ -1,5 +1,5 @@
 ﻿class OutputPort : IPort {
-    private IGrid Grid;
+    private SimulationGrid Grid;
 
     public State[] GetNeighbors() {
         int i = 0;
@@ -27,7 +27,7 @@
         return neighbors;
     }
 
-    public OutputPort(IGrid grid, int x, int y) {
+    public OutputPort(SimulationGrid grid, int x, int y) {
         Grid = grid;
 
         InnerX = x;

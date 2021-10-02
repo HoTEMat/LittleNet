@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-class GridContainer : IGridContainer {
+class GridContainer : ICloneable<GridContainer> {
     private Dictionary<(int x, int y), IPort> relativePortPlacement = new Dictionary<(int x, int y), IPort>();
 
-    public GridContainer(int x, int y, List<IPort> ports, IGrid grid, Rotation rotation) {
+    public GridContainer(int x, int y, SimulationGrid grid, Rotation rotation) {
         Grid = grid;
+        var ports = grid.GetPorts();
 
         X = x;
         Y = y;
@@ -72,5 +73,13 @@ class GridContainer : IGridContainer {
     public IReadOnlyDictionary<(int x, int y), IPort> RelativePortPlacement => relativePortPlacement;
 
     public Rotation Rotation { get; set; }
-    public IGrid Grid { get; }
+    public SimulationGrid Grid { get; }
+
+    public GridContainer Clone() {
+        var clone = new GridContainer(X, Y, Grid.Clone(), Rotation) {
+            relativePortPlacement = relativePortPlacement
+        };
+
+        return clone;
+    }
 }

@@ -2,10 +2,10 @@ using System.Diagnostics;
 using System.Linq;
 
 class Port : IPort {
-    private readonly IGridContainer Container;
-    private readonly IGrid Grid;
+    private readonly GridContainer Container;
+    private readonly SimulationGrid Grid;
 
-    public Port(IGridContainer cont, int x, int y) {
+    public Port(GridContainer cont, int x, int y) {
         Container = cont;
         Grid = cont.Grid;
 
@@ -21,7 +21,7 @@ class Port : IPort {
         return Grid.Get(InnerX, InnerY);
     }
 
-    public State[] GetNeighbors(IGrid parentGrid) {
+    public State[] GetNeighbors(SimulationGrid parentGrid) {
         int i = 0;
         int gridWidth = Grid.Width;
         int gridHeight = Grid.Height;

@@ -23,7 +23,6 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         public State State;
         public Sprite Color;
     }
-    [FormerlySerializedAs("StateToColorArray")]
     public StateToSpriteItem[] StateToSpriteArray;
     private IReadOnlyDictionary<State, Sprite> StateToSprite;
     public void OnBeforeSerialize() {
@@ -53,7 +52,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         }
     }
 
-    private void InitGrid(IGrid grid) {
+    private void InitGrid(SimulationGrid grid) {
         gridTiles = new GridTile[grid.Width, grid.Height];
         InitGridTiles();
     }

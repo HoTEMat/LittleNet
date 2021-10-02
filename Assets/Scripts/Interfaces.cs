@@ -37,45 +37,6 @@ interface IPort {
     int InnerY { get; }
 }
 
-interface IGrid {
-    State Get(int x, int y);
-
-    void Set(int x, int y, State state);
-
-    IEnumerable<IPort> GetPorts();
-
-    void AddPort(IPort port);
-
-    void InsertContainer(IGridContainer container);
-
-    IGridContainer GetContainerAt(int x, int y);
-
-    void RemoveContainerAt(IGridContainer container);
-
-    List<IGridContainer> GetContainers();
-
-    void DoIteration();
-    void DoSwap();
-
-    int Width { get; }
-    int Height { get; }
-
-    void Reset();
-}
-
-interface IGridContainer {
-    int X { get; set; }
-    int Y { get; set; }
-
-    int OuterWidth { get; }
-    int OuterHeight { get; }
-
-    IReadOnlyDictionary<(int x, int y), IPort> RelativePortPlacement { get; }
-    Rotation Rotation { get; set; }
-
-    IGrid Grid { get; }
-}
-
 interface IAutomaton {
     State NextState(State up, State down, State left, State right, State center);
 }
@@ -100,12 +61,16 @@ interface ILevelValidator {
 }
 
 interface ILevel {
-    IGrid Grid { get; }
+    SimulationGrid Grid { get; }
     ILevelValidator Validator { get; }
 
     ILevelState DoIteration();
-    
+
     int GetIteration { get; }
 
     void Reset();
+}
+
+interface ICloneable<T> where T : ICloneable<T> {
+    T Clone();
 }

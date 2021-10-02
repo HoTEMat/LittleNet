@@ -8,7 +8,8 @@ using UnityEditor.PackageManager.UI;
 class ToolPicker : MonoBehaviour {
     public UITool CurrentTool { get; private set; }
     public Camera camera;
-    
+    public RectTransform backgroundPosition;
+
     [SerializeField] private Button buttonPrefab;
 
     private List<Button> buttonPositions = new List<Button>();
@@ -20,7 +21,7 @@ class ToolPicker : MonoBehaviour {
     private void Start() {
         int buttonNum = 0;
         buttonSize = buttonPrefab.GetComponent<RectTransform>().rect.width;
-        
+
         buttonCount = 0;
         foreach (State state in Enum.GetValues(typeof(State))) {
             if (state.IsPlaceable())
@@ -35,7 +36,7 @@ class ToolPicker : MonoBehaviour {
         foreach (State state in Enum.GetValues(typeof(State))) {
             if (!state.IsPlaceable())
                 continue;
-            
+
             Button button = Instantiate(buttonPrefab, transform);
             button.onClick.AddListener(() => HandleStateSelected(state));
 
@@ -44,8 +45,8 @@ class ToolPicker : MonoBehaviour {
             buttonPositions.Add(button);
 
             RectTransform buttonTransform = button.GetComponent<RectTransform>();
-            float x = buttonNum * (buttonTransform.rect.width + buttonSpacing) + buttonTransform.rect.width / 2 + leftOffset;
-            buttonTransform.anchoredPosition = new Vector2(x, -buttonTransform.rect.height / 2 - buttonSpacing);
+            float x = buttonNum * (buttonSize + buttonSpacing) + buttonSize / 2 + leftOffset;
+            buttonTransform.anchoredPosition = new Vector2(x, backgroundPosition.anchoredPosition.y - buttonSize / 2);
 
             buttonNum++;
         }
@@ -60,18 +61,18 @@ class ToolPicker : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             CurrentTool = null;
         }
-        
+
         float totalWidth = buttonSpacing * (buttonCount - 1) +
                            buttonSize * buttonCount;
 
         float leftOffset = (camera.scaledPixelWidth - totalWidth) / 2;
-        
+
         int buttonNum = 0;
         foreach (Button button in buttonPositions) {
             RectTransform buttonTransform = button.GetComponent<RectTransform>();
-            
-            float x = buttonNum * (buttonTransform.rect.width + buttonSpacing) + buttonTransform.rect.width / 2 + leftOffset;
-            buttonTransform.anchoredPosition = new Vector2(x, -buttonTransform.rect.height / 2 - buttonSpacing);
+
+            float x = buttonNum * (buttonSize + buttonSpacing) + buttonSize / 2 + leftOffset;
+            buttonTransform.anchoredPosition = new Vector2(x, backgroundPosition.anchoredPosition.y);
 
             buttonNum++;
         }

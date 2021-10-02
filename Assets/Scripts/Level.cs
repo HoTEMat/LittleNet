@@ -8,7 +8,7 @@ class Level : ILevel {
 
     public Level(ILevelValidator validator, int width, int height) {
         Validator = validator;
-        Grid = new SimulationGrid(width, height);
+        Grid = new SimulationGrid(width, height, "Root grid");
 
         // create evenly spaced input ports
         int inputSpacing = height / (Validator.InputCount + 1);
@@ -20,27 +20,34 @@ class Level : ILevel {
         // create evenly spaced output ports
         int outputSpacing = height / (Validator.OutputCount + 1);
         for (int i = 0; i < Validator.InputCount; i++) {
-            var port = new OutputPort(Grid, width - 1, i * inputSpacing);
+            var port = new OutputPort(Grid, width - 1, i * outputSpacing);
 
             Grid.AddPort(port);
             outputPortsList.Add(port);
         }
+
+        OutputPorts = outputPortsList.ToArray();
     }
 
     public Level(ILevelValidator validator, int width, int height, IEnumerable<InputPort> inputs, IEnumerable<OutputPort> outputs) {
         Validator = validator;
-        Grid = new SimulationGrid(width, height);
+
+        Grid = new SimulationGrid(width, height, "Root grid");
 
         foreach (var port in inputs.Cast<IPort>().Concat(outputs)) {
             Grid.AddPort(port);
         }
     }
 
-    public IGrid Grid { get; }
+    public SimulationGrid Grid { get; private set; }
 
     public ILevelValidator Validator { get; }
 
     public ILevelState DoIteration() {
+        if (iteration == 0) {
+            Grid = Grid.Clone();
+        }
+
         Grid.DoIteration();
         Grid.DoSwap();
 
@@ -58,7 +65,7 @@ class Level : ILevel {
     public void Reset() {
         iteration = 0;
 
-        Grid.Reset();
+        Grid = Grid.Prototype.ProtypeGrid;
         Validator.Reset();
     }
 }
