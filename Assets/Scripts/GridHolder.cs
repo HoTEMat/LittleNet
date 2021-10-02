@@ -14,7 +14,8 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
     [SerializeField]
     private float gridLineWidth = 0.01f;
-    private ILevel level { get; set; }
+
+    private ILevel level;
     private GridTile[,] gridTiles;
     private UITool activeTool;
 
