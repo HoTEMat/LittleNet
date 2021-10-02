@@ -121,6 +121,7 @@ static class StateEx {
         switch (state) {
             case State.Nothing:
             case State.WireOn:
+            case State.WireDead:
             case State.WireOff:
             case State.LampOn:
             case State.LampOff:

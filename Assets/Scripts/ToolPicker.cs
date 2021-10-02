@@ -8,6 +8,7 @@ class ToolPicker : MonoBehaviour {
     public UITool CurrentTool { get; private set; }
     public Camera camera;
     public RectTransform backgroundPosition;
+    public GridHolder GridHolder;
     
     [SerializeField] private Button buttonPrefab;
 
@@ -21,7 +22,7 @@ class ToolPicker : MonoBehaviour {
             Button button = Instantiate(buttonPrefab, transform);
             button.onClick.AddListener(() => HandleStateSelected(state));
 
-            button.GetComponent<Image>().color = GridHolder.stateToColor[state];
+            button.GetComponent<Image>().sprite = GridHolder.StateToSprite[state];
 
             buttonPositions.Add(button);
         }
