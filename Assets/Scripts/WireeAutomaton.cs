@@ -112,6 +112,11 @@ class WireeAutomaton : IAutomaton {
 }
 
 static class StateEx {
+
+    public static State AsWire(this bool b) {
+        return b ? State.WireOn : State.WireOff;
+    }
+
     public static bool IsPlaceable(this State state) {
         switch (state) {
             case State.Nothing:
