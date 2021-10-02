@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 class Level : ILevel {
     private IPort[] OutputPorts;
@@ -16,13 +17,22 @@ class Level : ILevel {
 
         List<IPort> outputPortsList = new List<IPort>();
 
-        // create evenly spaced output ports (that are just normal ports)
+        // create evenly spaced output ports
         int outputSpacing = height / (Validator.OutputCount + 1);
         for (int i = 0; i < Validator.InputCount; i++) {
             var port = new OutputPort(Grid, width - 1, i * inputSpacing);
 
             Grid.AddPort(port);
             outputPortsList.Add(port);
+        }
+    }
+
+    public Level(ILevelValidator validator, int width, int height, IEnumerable<InputPort> inputs, IEnumerable<OutputPort> outputs) {
+        Validator = validator;
+        Grid = new SimulationGrid(width, height);
+
+        foreach (var port in inputs.Cast<IPort>().Concat(outputs)) {
+            Grid.AddPort(port);
         }
     }
 

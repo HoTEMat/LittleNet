@@ -1,3 +1,4 @@
+
 public class HappyValidator : ILevelValidator {
     public int InputCount => 1;
     public int OutputCount => 1;
