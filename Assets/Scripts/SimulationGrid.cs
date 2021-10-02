@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-class SimulationGrid : ICloneable<SimulationGrid> {
+class SimulationGrid {
     private IAutomaton automaton = new WireeAutomaton();
 
     public bool CanSimulate { get; private set; } = false;
@@ -183,15 +183,15 @@ class SimulationGrid : ICloneable<SimulationGrid> {
             container.Grid.DoSwap();
     }
 
-    public SimulationGrid Clone() {
+    public SimulationGrid Clone(GridContainer newContainer = null) {
         var clone = new SimulationGrid(Width, Height, Prototype) {
             automaton = automaton,
             CanSimulate = true,
             containerMapping = containerMapping.Select(kv => kv.Value.Clone()).ToDictionary(v => (v.X, v.Y)),
             grid = grid.ToDictionary(kv => kv.Key, kv => kv.Value),
-            ports = ports.ToDictionary(kv => kv.Key, kv => kv.Value),
         };
 
+        clone.ports = ports.ToDictionary(kv => kv.Key, kv => kv.Value is Port p ? p.Clone(newContainer) : kv.Value.Clone(clone));
         clone.containers = clone.containerMapping.Select(kv => kv.Value).ToList();
         return clone;
     }

@@ -36,6 +36,10 @@
         return Grid.Get(InnerX, InnerY);
     }
 
+    public IPort Clone(SimulationGrid newGrid) {
+        return new OutputPort(newGrid, InnerX, InnerY);
+    }
+
     public int InnerX { get; }
     public int InnerY { get; }
 }

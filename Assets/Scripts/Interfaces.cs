@@ -35,6 +35,8 @@ interface IPort {
 
     int InnerX { get; }
     int InnerY { get; }
+
+    IPort Clone(SimulationGrid newGrid);
 }
 
 interface IAutomaton {

@@ -50,6 +50,15 @@ class Port : IPort {
         return neighbors;
     }
 
+    
+    public Port Clone(GridContainer newGridCont) {
+        var clone = new Port(newGridCont, InnerX, InnerY);
+        return clone;
+    }
+    public IPort Clone(SimulationGrid newGrid) {
+        throw new System.InvalidOperationException();
+    }
+
     public int InnerX { get; }
     public int InnerY { get; }
 
