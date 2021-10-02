@@ -39,7 +39,7 @@ class ToolPicker : MonoBehaviour {
             Button button = Instantiate(buttonPrefab, transform);
             button.onClick.AddListener(() => HandleStateSelected(state));
 
-            button.GetComponent<Image>().color = GridHolder.stateToColor[state];
+            button.GetComponent<Image>().color = GridTile.stateToColor[state];
 
             buttonPositions.Add(button);
 

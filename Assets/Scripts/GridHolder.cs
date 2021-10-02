@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
+using System.Collections.ObjectModel;
 
-class GridHolder : MonoBehaviour {
+class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     public GridTile GridTilePrefab;
     public GameObject GridLinePrefab;
     public ToolPicker ToolPicker;
@@ -16,27 +18,24 @@ class GridHolder : MonoBehaviour {
     private GridTile[,] gridTiles;
     private UITool activeTool;
 
-    public static readonly IReadOnlyDictionary<State, Color> stateToColor = new Dictionary<State, Color> {
-        { State.Nothing, Color.black },
-        { State.WireOn, Color.red },
-        { State.WireDead, Color.gray },
-        { State.WireOff, new Color(.5f,0,0) },
-        { State.LampOn, new Color(1,1,.5f) },
-        { State.LampDead, new Color(.5f, .5f, .2f) },
-        { State.LampOff, new Color(.5f, .5f, 0) },
-        { State.NotOn, new Color(0,1,0) },
-        { State.NotDead, new Color(.3f, .7f, .3f) },
-        { State.NotOff, new Color(0,.5f,0) },
-        { State.CrossHOnVOn, new Color(1,0,1) },
-        { State.CrossHOnVOff, new Color(1,0,1) },
-        { State.CrossHOffVOn, new Color(1,0,1) },
-        { State.CrossHOffVOff, new Color(1,0,1) },
-        { State.CrossHDeadVOn, new Color(1,0,1) },
-        { State.CrossHOnVDead, new Color(1,0,1) },
-        { State.CrossHDeadVDead, new Color(1,0,1) },
-        { State.CrossHDeadVOff, new Color(1,0,1) },
-        { State.CrossHOffVDead, new Color(1,0,1) },
-    };
+    [Serializable]
+    public struct StateToSpriteItem {
+        public State State;
+        public Sprite Color;
+    }
+    [FormerlySerializedAs("StateToColorArray")]
+    public StateToSpriteItem[] StateToSpriteArray;
+    private IReadOnlyDictionary<State, Sprite> StateToSprite;
+    public void OnBeforeSerialize() {
+        // Do nothing.
+    }
+    public void OnAfterDeserialize() {
+        var StateToSpriteMutable = new Dictionary<State, Sprite>();
+        foreach (StateToSpriteItem stateSprite in StateToSpriteArray) {
+            StateToSpriteMutable[stateSprite.State] = stateSprite.Color;
+        }
+        StateToSprite = new ReadOnlyDictionary<State, Sprite>(StateToSpriteMutable);
+    }
 
     private void Start() {
         level = Levels.NotLevel();
@@ -70,7 +69,6 @@ class GridHolder : MonoBehaviour {
                 tile.SetTopLeft(GridPositionToPosition(gridX, gridY, 0));
                 tile.OnClicked += clickHandler;
                 tile.OnMouseInside += mouseOverTileHandler;
-                tile.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
                 gridTiles[gridX, gridY] = tile;
             }
         }
@@ -80,10 +78,9 @@ class GridHolder : MonoBehaviour {
         for (int gridX = 0; gridX < level.Grid.Width; gridX++) {
             for (int gridY = 0; gridY < level.Grid.Height; gridY++) {
                 State state = level.Grid.Get(gridX, gridY);
-                Color color = stateToColor[state];
                 GridTile tile = gridTiles[gridX, gridY];
-
-                tile.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", color);
+                //tile.ShowColor(state);
+                tile.ShowSprite(StateToSprite[state]);
             }
         }
     }
