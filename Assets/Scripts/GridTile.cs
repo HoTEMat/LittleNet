@@ -5,6 +5,7 @@ using UnityEngine;
 
 class GridTile : MonoBehaviour { 
     public event Action<GridTile> OnClicked;
+    public event Action<GridTile> OnMouseInside;
     public int X { get; set; }
     public int Y { get; set; }
     
@@ -14,7 +15,11 @@ class GridTile : MonoBehaviour {
         transform.position = new Vector3(topLeft.x + w / 2, topLeft.y + h / 2, topLeft.z);
     }
 
-    private void OnMouseUpAsButton() {
+    private void OnMouseDown() {
         OnClicked?.Invoke(this);
+    }
+
+    private void OnMouseOver() {
+        OnMouseInside?.Invoke(this);
     }
 }

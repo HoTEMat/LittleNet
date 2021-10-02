@@ -29,13 +29,13 @@ class CameraController : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(1)) {
             dragStartPosition = Input.mousePosition;
             dragLastPosition = dragStartPosition;
             isDragging = true;
         }
 
-        if (Input.GetMouseButton(0) && isDragging) {
+        if (Input.GetMouseButton(1) && isDragging) {
             Vector2 delta = (Vector2)Input.mousePosition - dragLastPosition;
             dragLastPosition = Input.mousePosition;
 
@@ -44,7 +44,7 @@ class CameraController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && isDragging) {
+        if (Input.GetMouseButtonUp(1) && isDragging) {
             isDragging = false;
         }
     }

@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
 
 class GridHolder : MonoBehaviour {
     public GridTile GridTilePrefab;
     public GameObject GridLinePrefab;
     public ToolPicker ToolPicker;
+    public EventSystem EventSystem;
 
     [SerializeField]
     private float gridLineWidth = 0.01f;
     private IGrid grid { get; set; }
     private GridTile[,] gridTiles;
+    private UITool activeTool;
 
     public static readonly IReadOnlyDictionary<State, Color> stateToColor = new Dictionary<State, Color> {
         { State.Nothing, Color.black },
-        { State.WireOff, Color.red },
+        { State.WireOn, Color.red },
         { State.WireDead, Color.gray },
         { State.WireOff, new Color(.5f,0,0) },
         { State.LampOn, new Color(1,1,.5f) },
@@ -41,6 +44,14 @@ class GridHolder : MonoBehaviour {
 
     private void Update() {
         UpdateGridTiles();
+
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            grid.DoIteration();
+            grid.DoSwap();
+        }
+        if (!Input.GetMouseButton(0)) {
+            activeTool = null;
+        }
     }
 
     private void SetGrid(IGrid grid) {
@@ -51,6 +62,7 @@ class GridHolder : MonoBehaviour {
 
     private void InitGridTiles() {
         var clickHandler = new Action<GridTile>(HandleTileClicked);
+        var mouseOverTileHandler = new Action<GridTile>(HandleMouseOverTile);
         for (int gridX = 0; gridX < grid.Width; gridX++) {
             for (int gridY = 0; gridY < grid.Height; gridY++) {
                 GridTile tile = Instantiate<GridTile>(GridTilePrefab, transform);
@@ -58,6 +70,7 @@ class GridHolder : MonoBehaviour {
                 tile.Y = gridY;
                 tile.SetTopLeft(GridPositionToPosition(gridX, gridY, 0));
                 tile.OnClicked += clickHandler;
+                tile.OnMouseInside += mouseOverTileHandler;
                 tile.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
                 gridTiles[gridX, gridY] = tile;
             }
@@ -77,6 +90,22 @@ class GridHolder : MonoBehaviour {
     }
 
     private void HandleTileClicked(GridTile tile) {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        if (ToolPicker.CurrentTool == null)
+            return;
+        activeTool = ToolPicker.CurrentTool;
+        ApplyTool(activeTool, tile);
+    }
+    private void HandleMouseOverTile(GridTile tile) {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        if (activeTool != null) {
+            ApplyTool(activeTool, tile);
+        }
+    }
+
+    private void ApplyTool(UITool tool, GridTile tile) {
         if (ToolPicker.CurrentTool is PlaceTileTool placeTile) {
             grid.Set(tile.X, tile.Y, placeTile.TileType);
         }

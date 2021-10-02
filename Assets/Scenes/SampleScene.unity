@@ -155,7 +155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridTilePrefab: {fileID: 9019156169476675043, guid: 9b364aee6b74ad345be76fbddc5dfebf, type: 3}
   GridLinePrefab: {fileID: 4479516905570273988, guid: b62640d7e31654e4990f956824ff438d, type: 3}
-  ToolPicker: {fileID: 0}
+  ToolPicker: {fileID: 858196696}
+  EventSystem: {fileID: 192349364}
   gridLineWidth: 0.05
 --- !u!4 &53124909
 Transform:
