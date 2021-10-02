@@ -164,39 +164,39 @@ MonoBehaviour:
   - State: 1
     Color: {fileID: -6639906334958310984, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 2
-    Color: {fileID: 0}
+    Color: {fileID: -3349328943540354735, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 3
-    Color: {fileID: 0}
+    Color: {fileID: -7534535940975340895, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 4
-    Color: {fileID: 0}
+    Color: {fileID: 6286976192416913268, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 5
-    Color: {fileID: 0}
+    Color: {fileID: 5388003611247066133, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 6
-    Color: {fileID: 0}
+    Color: {fileID: 1294051356934349951, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 7
-    Color: {fileID: 0}
+    Color: {fileID: 5150963315147068481, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 8
-    Color: {fileID: 0}
+    Color: {fileID: 3823837387367104537, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 9
-    Color: {fileID: 0}
+    Color: {fileID: -8643995938055668797, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 10
-    Color: {fileID: 0}
+    Color: {fileID: -6868325506129793441, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 11
-    Color: {fileID: 0}
+    Color: {fileID: -4932510937378501776, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 12
-    Color: {fileID: 0}
+    Color: {fileID: -4307181593662417032, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 13
-    Color: {fileID: 0}
+    Color: {fileID: 8332761434154784661, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 14
-    Color: {fileID: 0}
+    Color: {fileID: 1420407923511036144, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 15
-    Color: {fileID: 0}
+    Color: {fileID: -3525155788941449788, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 16
-    Color: {fileID: 0}
+    Color: {fileID: -5525829168148948368, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 17
-    Color: {fileID: 0}
+    Color: {fileID: 4974663028207915588, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
   - State: 18
-    Color: {fileID: 0}
+    Color: {fileID: 8334137094185960375, guid: 1536633f6d3e6f846a840cc9f3c505ec, type: 3}
 --- !u!4 &53124909
 Transform:
   m_ObjectHideFlags: 0
