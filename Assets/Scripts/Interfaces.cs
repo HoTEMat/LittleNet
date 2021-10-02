@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum State {
+public enum State {
     Nothing,
     WireOn,
     WireDead,
@@ -23,7 +23,7 @@ enum State {
     CrossHOffVDead
 }
 
-enum Rotation {
+public enum Rotation {
     By0,
     By90,
     By180,
@@ -44,21 +44,23 @@ interface IGrid {
 
     IEnumerable<IPort> GetPorts();
 
+    void AddPort(IPort port);
+
     void InsertContainer(IGridContainer container);
 
-    // Returns null when no container is found.
     IGridContainer GetContainerAt(int x, int y);
 
     void RemoveContainerAt(IGridContainer container);
 
     List<IGridContainer> GetContainers();
 
-    // Is called on the outermost container.
     void DoIteration();
     void DoSwap();
 
     int Width { get; }
     int Height { get; }
+
+    void Reset();
 }
 
 interface IGridContainer {
@@ -78,21 +80,34 @@ interface IAutomaton {
     State NextState(State up, State down, State left, State right, State center);
 }
 
-enum ILevelState {
+public enum ILevelState {
     Nothing,
     Success,
     Failure
 }
 
 interface ILevelValidator {
+    int InputCount { get; }
+    int OutputCount { get; }
+
     ILevelState ValidateStates(State[] states);
 
     State[] GetInputStates();
+
+    void MoveToNextInputState();
+
+    void Reset();
 }
 
 interface ILevel {
     IGrid Grid { get; }
     ILevelValidator Validator { get; }
+
+    ILevelState DoIteration();
+    
+    int GetIteration { get; }
+
+    void Reset();
 }
 
 public class Interfaces : MonoBehaviour {
