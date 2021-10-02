@@ -3,22 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEditor.PackageManager.UI;
 
-class ToolPicker : MonoBehaviour
-{
+class ToolPicker : MonoBehaviour {
     public UITool CurrentTool { get; private set; }
+    public Camera camera;
+    
     [SerializeField] private Button buttonPrefab;
+
+    private List<Button> buttonPositions = new List<Button>();
+
+    private int buttonSpacing = 15;
+    private int buttonCount;
+    private float buttonSize;
 
     private void Start() {
         int buttonNum = 0;
-        var handleStateSelected = new Action<State>(HandleStateSelected);
+        buttonCount = Enum.GetValues(typeof(State)).Length;
+        buttonSize = buttonPrefab.GetComponent<RectTransform>().rect.width;
+
+        float totalWidth = buttonSpacing * (buttonCount - 1) +
+                           buttonSize * buttonCount;
+
+        float leftOffset = (camera.scaledPixelWidth - totalWidth) / 2;
+        
         foreach (State state in Enum.GetValues(typeof(State))) {
             Button button = Instantiate(buttonPrefab, transform);
-            button.onClick.AddListener(new UnityEngine.Events.UnityAction(() => HandleStateSelected(state)));
+            button.onClick.AddListener(() => HandleStateSelected(state));
+
+            button.GetComponent<Image>().color = GridHolder.stateToColor[state];
+
+            buttonPositions.Add(button);
 
             RectTransform buttonTransform = button.GetComponent<RectTransform>();
-            float x = 50 + buttonNum * (buttonTransform.rect.width + 10);
-            buttonTransform.anchoredPosition = new Vector2(x, -(5 + buttonTransform.rect.height / 2));
+            float x = buttonNum * (buttonTransform.rect.width + buttonSpacing) + buttonTransform.rect.width / 2 + leftOffset;
+            buttonTransform.anchoredPosition = new Vector2(x, -buttonTransform.rect.height / 2 - buttonSpacing);
 
             buttonNum++;
         }
@@ -29,15 +48,30 @@ class ToolPicker : MonoBehaviour
         CurrentTool = new PlaceTileTool(state);
     }
 
-    private void Update()
-    {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             CurrentTool = null;
+        }
+        
+        float totalWidth = buttonSpacing * (buttonCount - 1) +
+                           buttonSize * buttonCount;
+
+        float leftOffset = (camera.scaledPixelWidth - totalWidth) / 2;
+        
+        int buttonNum = 0;
+        foreach (Button button in buttonPositions) {
+            RectTransform buttonTransform = button.GetComponent<RectTransform>();
+            
+            float x = buttonNum * (buttonTransform.rect.width + buttonSpacing) + buttonTransform.rect.width / 2 + leftOffset;
+            buttonTransform.anchoredPosition = new Vector2(x, -buttonTransform.rect.height / 2 - buttonSpacing);
+
+            buttonNum++;
         }
     }
 }
 
-interface UITool { }
+interface UITool {
+}
 
 class PlaceTileTool : UITool {
     public State TileType { get; }

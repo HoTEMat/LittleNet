@@ -366,6 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbd5864570958a41a94ef76256e02d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 519420031}
   buttonPrefab: {fileID: 3110492723994685975, guid: 745c9e37568c9514fba0f4ca53ffc8b6, type: 3}
 --- !u!114 &858196697
 MonoBehaviour:
