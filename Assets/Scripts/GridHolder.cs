@@ -13,7 +13,7 @@ class GridHolder : MonoBehaviour {
     private IGrid grid { get; set; }
     private GridTile[,] gridTiles;
 
-    private static readonly IReadOnlyDictionary<State, Color> stateToColor = new Dictionary<State, Color> {
+    public static readonly IReadOnlyDictionary<State, Color> stateToColor = new Dictionary<State, Color> {
         { State.Nothing, Color.black },
         { State.WireOff, Color.red }
     };
@@ -33,7 +33,6 @@ class GridHolder : MonoBehaviour {
     }
 
     private void InitGridTiles() {
-        Debug.Log("init");
         var clickHandler = new Action<GridTile>(HandleTileClicked);
         for (int gridX = 0; gridX < grid.Width; gridX++) {
             for (int gridY = 0; gridY < grid.Height; gridY++) {
@@ -61,8 +60,8 @@ class GridHolder : MonoBehaviour {
     }
 
     private void HandleTileClicked(GridTile tile) {
-        if (ToolPicker.CurrentTool == UITool.PlaceWire) {
-            grid.Set(tile.X, tile.Y, State.WireOff);
+        if (ToolPicker.CurrentTool is PlaceTileTool placeTile) {
+            grid.Set(tile.X, tile.Y, placeTile.TileType);
         }
     }
 
