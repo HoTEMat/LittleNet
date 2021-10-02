@@ -107,8 +107,8 @@ class SimulationGrid {
         // when starting the simulation, save the initial grid
         newGrid = new Dictionary<(int x, int y), State>();
 
-        foreach (var position in grid) {
-            (int x, int y) = position.Key;
+        foreach (var position in grid.Keys.Concat(ports.Keys)) {
+            (int x, int y) = position;
 
             (int, int)[] interestingTilesDeltas = { (0, 1), (1, 0), (-1, 0), (0, -1), (0, 0) };
             (int, int)[] neighbourDeltas = { (0, -1), (0, 1), (-1, 0), (1, 0) }; // TODO: constant
@@ -130,7 +130,10 @@ class SimulationGrid {
                         State left = neighbours[2];
                         State right = neighbours[3];
 
-                        newGrid[(nx, ny)] = automaton.NextState(up, down, left, right, p.GetState());
+                        State s = automaton.NextState(up, down, left, right, p.GetState());
+
+                        if (s != State.Nothing)
+                            newGrid[(nx, ny)] = s;
                     }
 
                     if (port is OutputPort op) {
@@ -141,12 +144,18 @@ class SimulationGrid {
                         State left = neighbours[2];
                         State right = neighbours[3];
 
-                        newGrid[(nx, ny)] = automaton.NextState(up, down, left, right, op.GetState());
+                        State s = automaton.NextState(up, down, left, right, op.GetState());
+
+                        if (s != State.Nothing)
+                            newGrid[(nx, ny)] = s;
                     }
 
                     // just copy
                     if (port is InputPort ip) {
-                        newGrid[(nx, ny)] = ip.GetState();
+                        State s = ip.GetState();
+                        
+                        if (s != State.Nothing)
+                            newGrid[(nx, ny)] = s;
                     }
                 }
 

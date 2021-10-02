@@ -43,7 +43,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     }
 
     private void Start() {
-        Level = Levels.NotLevel();
+        Level = Levels.CrossLevel();
         InitGrid(Level.Grid);
     }
 

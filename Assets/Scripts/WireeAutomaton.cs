@@ -48,13 +48,11 @@ class WireeAutomaton : IAutomaton {
 
             // Lamp
             case State.LampOff:
-                return vertical.Any(v => v.EmitsVertical())
-                    || horizontal.Any(h => h.EmitsHorizontal())
-                        ? State.LampOn
-                        : center;
+                return neighbors.Any(n => n == State.WireOn)
+                    ? State.LampOn
+                    : center;
             case State.LampOn:
-                return vertical.All(v => !v.EmitsVertical())
-                    || horizontal.All(h => !h.EmitsHorizontal())
+                return neighbors.All(n => !n.IsWire() || n == State.WireOff)
                     ? State.LampDead
                     : center;
             case State.LampDead: return State.LampOff;
@@ -62,8 +60,8 @@ class WireeAutomaton : IAutomaton {
             // Negator
             case State.NotOn:
                 return neighbors.All(n => !n.IsLamp() || n == State.LampOn)
-                    ? center
-                    : State.NotDead;
+                    ? State.NotDead
+                    : center;
             case State.NotOff:
                 return neighbors.Any(n => n.IsLamp() && n != State.LampOn)
                     ? State.NotOn
