@@ -17,7 +17,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     [SerializeField]
     private float gridLineWidth = 0.01f;
 
-    private ILevel level;
+    public ILevel Level { get; private set; }
     private GridTile[,] gridTiles;
     private UITool activeTool;
 
@@ -40,15 +40,15 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     }
 
     private void Start() {
-        level = Levels.NotLevel();
-        InitGrid(level.Grid);
+        Level = Levels.NotLevel();
+        InitGrid(Level.Grid);
     }
 
     private void Update() {
         UpdateGridTiles();
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            level.DoIteration();
+            Level.DoIteration();
         }
         if (!Input.GetMouseButton(0)) {
             activeTool = null;
@@ -63,8 +63,8 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     private void InitGridTiles() {
         var clickHandler = new Action<GridTile>(HandleTileClicked);
         var mouseOverTileHandler = new Action<GridTile>(HandleMouseOverTile);
-        for (int gridX = 0; gridX < level.Grid.Width; gridX++) {
-            for (int gridY = 0; gridY < level.Grid.Height; gridY++) {
+        for (int gridX = 0; gridX < Level.Grid.Width; gridX++) {
+            for (int gridY = 0; gridY < Level.Grid.Height; gridY++) {
                 GridTile tile = Instantiate<GridTile>(GridTilePrefab, transform);
                 tile.X = gridX;
                 tile.Y = gridY;
@@ -77,9 +77,9 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     }
 
     private void UpdateGridTiles() {
-        for (int gridX = 0; gridX < level.Grid.Width; gridX++) {
-            for (int gridY = 0; gridY < level.Grid.Height; gridY++) {
-                State state = level.Grid.Get(gridX, gridY);
+        for (int gridX = 0; gridX < Level.Grid.Width; gridX++) {
+            for (int gridY = 0; gridY < Level.Grid.Height; gridY++) {
+                State state = Level.Grid.Get(gridX, gridY);
                 GridTile tile = gridTiles[gridX, gridY];
                 if (ShowTileTextures) {
                     tile.ShowSprite(StateToSprite[state]);
@@ -108,7 +108,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
     private void ApplyTool(UITool tool, GridTile tile) {
         if (ToolPicker.CurrentTool is PlaceTileTool placeTile) {
-            level.Grid.Set(tile.X, tile.Y, placeTile.TileType);
+            Level.Grid.Set(tile.X, tile.Y, placeTile.TileType);
         }
     }
 
@@ -125,7 +125,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
     public (float, float) GetGridSize() {
         (float tileWidth, float tileHeight) = GetTileSize();
-        return (level.Grid.Width * (tileWidth + gridLineWidth), level.Grid.Height * (tileHeight + gridLineWidth));
+        return (Level.Grid.Width * (tileWidth + gridLineWidth), Level.Grid.Height * (tileHeight + gridLineWidth));
     }
 
     public Vector3 GetGridCenter() {

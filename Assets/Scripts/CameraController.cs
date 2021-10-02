@@ -32,6 +32,14 @@ class CameraController : MonoBehaviour
         HandleDragging();
         HandleZooming();
 
+        // One unit corresponds to one tile.
+        Camera.orthographicSize = Mathf.Min(Camera.orthographicSize,
+            Mathf.Min(gridHolder.Level.Grid.Height, gridHolder.Level.Grid.Width) / 2);
+        Camera.transform.position = new Vector3(
+            Mathf.Clamp(Camera.transform.position.x, 0, gridHolder.Level.Grid.Width),
+            Mathf.Clamp(Camera.transform.position.y, -gridHolder.Level.Grid.Height, 0),
+            Camera.transform.position.z);
+
         gridHolder.ShowTileTextures = Camera.orthographicSize < 16;
     }
 
@@ -43,10 +51,10 @@ class CameraController : MonoBehaviour
             return;
         float zoomAmount = scrollDelta > 0 ? (1 / mouseScrollSpeed) : mouseScrollSpeed;
 
-        var currentWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);
+        var oldWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);
         Camera.orthographicSize = Mathf.Max(2f, Camera.orthographicSize * zoomAmount);
         var newWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);
-        Camera.transform.position += currentWorldCenter - newWorldCenter;
+        Camera.transform.position += oldWorldCenter - newWorldCenter;
     }
 
     private void HandleDragging() {
