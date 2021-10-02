@@ -44,6 +44,8 @@ interface IGrid {
 
     IEnumerable<IPort> GetPorts();
 
+    void AddPort(IPort port);
+
     void InsertContainer(IGridContainer container);
 
     // Returns null when no container is found.
