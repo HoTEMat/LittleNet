@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-class Grid : IGrid {
+class SimulationGrid : IGrid {
     private IAutomaton automaton;
 
     private Dictionary<(int x, int y), State> grid = new Dictionary<(int x, int y), State>();
@@ -13,7 +13,7 @@ class Grid : IGrid {
 
     private List<IPort> ports = new List<IPort>();
 
-    public Grid(int width, int height) {
+    public SimulationGrid(int width, int height) {
         Width = width;
         Height = height;
     }
@@ -68,8 +68,9 @@ class Grid : IGrid {
     public void DoIteration() {
         // when starting the simulation, save the initial grid
         initialGrid ??= grid;
-
+        
         // TODO: iteration in the grid itself
+        // TODO: don't calculate ports if we're children (except when we're main, in which case it's weird)
 
         foreach (var container in GetContainers())
             container.Grid.DoIteration();
