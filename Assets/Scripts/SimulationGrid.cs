@@ -129,7 +129,7 @@ class SimulationGrid : IGrid {
                         int nnx = nx + ndx, nny = ny + ndy;
 
                         if (ValidBounds(nnx, nny))
-                            neighbours[i++] = grid[(nnx, nny)];
+                            neighbours[i++] = Get(nnx, nny);
                     }
 
                     newGrid[(nx, ny)] = automaton.NextState(
@@ -137,7 +137,7 @@ class SimulationGrid : IGrid {
                         neighbours[1],
                         neighbours[2],
                         neighbours[3],
-                        grid[(nx, ny)]
+                        Get(nx, ny)
                     );
                 }
             }
