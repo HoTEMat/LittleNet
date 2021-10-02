@@ -29,6 +29,25 @@ class CameraController : MonoBehaviour
             return;
         }
 
+        HandleDragging();
+        HandleZooming();
+    }
+
+    private void HandleZooming() {
+        float mouseScrollSpeed = 1.5f;
+        float scrollDelta = Input.mouseScrollDelta.y;
+        Vector2 zoomCenter = Input.mousePosition;
+        if (scrollDelta == 0)
+            return;
+        float zoomAmount = scrollDelta > 0 ? (1 / mouseScrollSpeed) : mouseScrollSpeed;
+
+        var currentWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);
+        Camera.orthographicSize = Mathf.Max(0.1f, Camera.orthographicSize * zoomAmount);
+        var newWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);
+        Camera.transform.position += currentWorldCenter - newWorldCenter;
+    }
+
+    private void HandleDragging() {
         if (Input.GetMouseButtonDown(1)) {
             dragStartPosition = Input.mousePosition;
             dragLastPosition = dragStartPosition;
