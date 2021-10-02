@@ -12,7 +12,7 @@ class GridHolder : MonoBehaviour {
 
     [SerializeField]
     private float gridLineWidth = 0.01f;
-    private IGrid grid { get; set; }
+    private ILevel level { get; set; }
     private GridTile[,] gridTiles;
     private UITool activeTool;
 
@@ -39,23 +39,22 @@ class GridHolder : MonoBehaviour {
     };
 
     private void Start() {
-        SetGrid(new SimulationGrid(30, 30));
+        level = Levels.NotLevel();
+        InitGrid(level.Grid);
     }
 
     private void Update() {
         UpdateGridTiles();
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            grid.DoIteration();
-            grid.DoSwap();
+            level.DoIteration();
         }
         if (!Input.GetMouseButton(0)) {
             activeTool = null;
         }
     }
 
-    private void SetGrid(IGrid grid) {
-        this.grid = grid;
+    private void InitGrid(IGrid grid) {
         gridTiles = new GridTile[grid.Width, grid.Height];
         InitGridTiles();
     }
@@ -63,8 +62,8 @@ class GridHolder : MonoBehaviour {
     private void InitGridTiles() {
         var clickHandler = new Action<GridTile>(HandleTileClicked);
         var mouseOverTileHandler = new Action<GridTile>(HandleMouseOverTile);
-        for (int gridX = 0; gridX < grid.Width; gridX++) {
-            for (int gridY = 0; gridY < grid.Height; gridY++) {
+        for (int gridX = 0; gridX < level.Grid.Width; gridX++) {
+            for (int gridY = 0; gridY < level.Grid.Height; gridY++) {
                 GridTile tile = Instantiate<GridTile>(GridTilePrefab, transform);
                 tile.X = gridX;
                 tile.Y = gridY;
@@ -78,9 +77,9 @@ class GridHolder : MonoBehaviour {
     }
 
     private void UpdateGridTiles() {
-        for (int gridX = 0; gridX < grid.Width; gridX++) {
-            for (int gridY = 0; gridY < grid.Height; gridY++) {
-                State state = grid.Get(gridX, gridY);
+        for (int gridX = 0; gridX < level.Grid.Width; gridX++) {
+            for (int gridY = 0; gridY < level.Grid.Height; gridY++) {
+                State state = level.Grid.Get(gridX, gridY);
                 Color color = stateToColor[state];
                 GridTile tile = gridTiles[gridX, gridY];
 
@@ -107,7 +106,7 @@ class GridHolder : MonoBehaviour {
 
     private void ApplyTool(UITool tool, GridTile tile) {
         if (ToolPicker.CurrentTool is PlaceTileTool placeTile) {
-            grid.Set(tile.X, tile.Y, placeTile.TileType);
+            level.Grid.Set(tile.X, tile.Y, placeTile.TileType);
         }
     }
 
@@ -124,7 +123,7 @@ class GridHolder : MonoBehaviour {
 
     public (float, float) GetGridSize() {
         (float tileWidth, float tileHeight) = GetTileSize();
-        return (grid.Width * (tileWidth + gridLineWidth), grid.Height * (tileHeight + gridLineWidth));
+        return (level.Grid.Width * (tileWidth + gridLineWidth), level.Grid.Height * (tileHeight + gridLineWidth));
     }
 
     public Vector3 GetGridCenter() {
