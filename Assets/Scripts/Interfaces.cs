@@ -109,6 +109,3 @@ interface ILevel {
 
     void Reset();
 }
-
-public class Interfaces : MonoBehaviour {
-}
