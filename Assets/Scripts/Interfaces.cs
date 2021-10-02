@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,11 +20,21 @@ enum State {
     CrossHOnVDead,
     CrossHDeadVDead,
     CrossHDeadVOff,
-    CrossHOffVDead,
+    CrossHOffVDead
 }
 
 enum Rotation {
-    By0, By90, By180, By270
+    By0,
+    By90,
+    By180,
+    By270
+}
+
+interface IPort {
+    State GetState();
+
+    int InnerX { get; }
+    int InnerY { get; }
 }
 
 interface IGrid {
@@ -33,17 +42,20 @@ interface IGrid {
 
     void Set(int x, int y, State state);
 
+    IEnumerable<IPort> GetPorts();
+
     void InsertContainer(IGridContainer container);
-    
-    // returns null when no container is found
+
+    // Returns null when no container is found.
     IGridContainer GetContainerAt(int x, int y);
-    
+
     void RemoveContainerAt(IGridContainer container);
 
     List<IGridContainer> GetContainers();
 
-    // volá se jen na tom vnějším
+    // Is called on the outermost container.
     void DoIteration();
+    void DoSwap();
 
     int Width { get; }
     int Height { get; }
@@ -56,6 +68,7 @@ interface IGridContainer {
     int OuterWidth { get; }
     int OuterHeight { get; }
 
+    IReadOnlyDictionary<(int x, int y), IPort> RelativePortPlacement { get; }
     Rotation Rotation { get; set; }
 
     IGrid Grid { get; }
@@ -65,4 +78,22 @@ interface IAutomaton {
     State NextState(State up, State down, State left, State right, State center);
 }
 
-public class Interfaces : MonoBehaviour { }
+enum ILevelState {
+    Nothing,
+    Success,
+    Failure
+}
+
+interface ILevelValidator {
+    ILevelState ValidateStates(State[] states);
+
+    State[] GetInputStates();
+}
+
+interface ILevel {
+    IGrid Grid { get; }
+    ILevelValidator Validator { get; }
+}
+
+public class Interfaces : MonoBehaviour {
+}
