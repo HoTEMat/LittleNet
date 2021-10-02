@@ -1,26 +1,50 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
-class SimulationGrid : IGrid {
+class SimulationGrid : ICloneable<SimulationGrid> {
     private IAutomaton automaton = new WireeAutomaton();
 
+    public bool CanSimulate { get; private set; } = false;
+    public GatePrototype Prototype { get; }
+
     private Dictionary<(int x, int y), State> grid = new Dictionary<(int x, int y), State>();
-    private Dictionary<(int x, int y), State> initialGrid;
     private Dictionary<(int x, int y), State> newGrid;
+    //private Dictionary<(int x, int y), State> initialGrid;
 
-    private List<IGridContainer> containers = new List<IGridContainer>();
+    private List<GridContainer> containers = new List<GridContainer>();
 
-    private Dictionary<(int x, int y), IGridContainer> containerMapping =
-        new Dictionary<(int x, int y), IGridContainer>();
+    private Dictionary<(int x, int y), GridContainer> containerMapping =
+        new Dictionary<(int x, int y), GridContainer>();
 
     private Dictionary<(int x, int y), IPort> ports = new Dictionary<(int x, int y), IPort>();
 
-    public SimulationGrid(int width, int height) {
+    /// <summary>
+    /// Create a simulation grid with an existing prototype
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="prototype"></param>
+    public SimulationGrid(int width, int height, GatePrototype prototype) {
         Width = width;
         Height = height;
+        Prototype = prototype;
     }
 
     /// <summary>
-    /// Either returns the value from the dictionary, or nothing if it's not found.
+    /// Create a simulation grid, and a new unique prototype.
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="prototype"></param>
+    public SimulationGrid(int width, int height, string prototypeName) {
+        Width = width;
+        Height = height;
+        Prototype = new GatePrototype(this, prototypeName);
+    }
+
+    /// <summary>
+    /// Either returns the value from the dictionary, or <see cref="State.Nothing"/> if it's not found.
     /// </summary>
     public State Get(int x, int y)
         => grid.TryGetValue((x, y), out State state) ? state : State.Nothing;
@@ -31,6 +55,8 @@ class SimulationGrid : IGrid {
     public void Set(int x, int y, State state) {
         if (GetContainerAt(x, y) == null)
             grid[(x, y)] = state;
+        else
+            throw new InvalidOperationException();
     }
 
     public IEnumerable<IPort> GetPorts() => ports.Values;
@@ -42,47 +68,47 @@ class SimulationGrid : IGrid {
     /// <summary>
     /// Adds the container, also calculating its mapping.
     /// </summary>
-    public void InsertContainer(IGridContainer container) {
+    public void InsertContainer(GridContainer container) {
         containers.Add(container);
 
         // TODO: mapping rotation in the future
         for (int x = 0; x < container.OuterWidth; x++)
-        for (int y = 0; y < container.OuterHeight; y++)
-            containerMapping[(container.X + x, container.Y + y)] = container;
+            for (int y = 0; y < container.OuterHeight; y++)
+                containerMapping[(container.X + x, container.Y + y)] = container;
     }
 
-    public IGridContainer GetContainerAt(int x, int y) =>
-        containerMapping.TryGetValue((x, y), out IGridContainer container) ? container : null;
+    public GridContainer GetContainerAt(int x, int y) =>
+        containerMapping.TryGetValue((x, y), out GridContainer container) ? container : null;
 
     /// <summary>
     /// Removes the container, also removing it from the mapping.
     /// </summary>
-    public void RemoveContainerAt(IGridContainer container) {
+    public void RemoveContainerAt(GridContainer container) {
         containers.Remove(container);
 
         // TODO: mapping rotation in the future
         for (int x = 0; x < container.OuterWidth; x++)
-        for (int y = 0; y < container.OuterHeight; y++)
-            containerMapping.Remove((container.X + x, container.Y + y));
+            for (int y = 0; y < container.OuterHeight; y++)
+                containerMapping.Remove((container.X + x, container.Y + y));
     }
 
-    public List<IGridContainer> GetContainers() {
+    public List<GridContainer> GetContainers() {
         return containers;
     }
 
     private bool ValidBounds(int x, int y) => x >= 0 && y >= 0 && x < Width && y < Height;
 
     public void DoIteration() {
-        // when starting the simulation, save the initial grid
-        initialGrid ??= grid;
+        if (!CanSimulate) throw new InvalidOperationException();
 
+        // when starting the simulation, save the initial grid
         newGrid = new Dictionary<(int x, int y), State>();
 
         foreach (var position in grid) {
             (int x, int y) = position.Key;
 
-            (int, int)[] interestingTilesDeltas = {(0, 1), (1, 0), (-1, 0), (0, -1), (0, 0)};
-            (int, int)[] neighbourDeltas = {(0, -1), (0, 1), (-1, 0), (1, 0)}; // TODO: constant
+            (int, int)[] interestingTilesDeltas = { (0, 1), (1, 0), (-1, 0), (0, -1), (0, 0) };
+            (int, int)[] neighbourDeltas = { (0, -1), (0, 1), (-1, 0), (1, 0) }; // TODO: constant
 
             // also do each neighbour, because they could have changed
             foreach ((int dx, int dy) in interestingTilesDeltas) {
@@ -154,12 +180,17 @@ class SimulationGrid : IGrid {
             container.Grid.DoSwap();
     }
 
-    public void Reset() {
-        grid = initialGrid;
-        initialGrid = null;
+    public SimulationGrid Clone() {
+        var clone = new SimulationGrid(Width, Height, Prototype) {
+            automaton = automaton,
+            CanSimulate = true,
+            containerMapping = containerMapping.Select(kv => kv.Value.Clone()).ToDictionary(v => (v.X, v.Y)),
+            grid = grid.ToDictionary(kv => kv.Key, kv => kv.Value),
+            ports = ports.ToDictionary(kv => kv.Key, kv => kv.Value),
+        };
 
-        foreach (var container in GetContainers())
-            container.Grid.Reset();
+        clone.containers = clone.containerMapping.Select(kv => kv.Value).ToList();
+        return clone;
     }
 
     public int Width { get; }

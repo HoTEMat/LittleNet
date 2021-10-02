@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class TestGrid : IGrid {
+class TestGrid : SimulationGrid {
     public int Width => 20;
 
     public int Height => 20;
@@ -22,11 +22,11 @@ class TestGrid : IGrid {
         throw new NotImplementedException();
     }
 
-    public IGridContainer GetContainerAt(int x, int y) {
+    public GridContainer GetContainerAt(int x, int y) {
         throw new NotImplementedException();
     }
 
-    public List<IGridContainer> GetContainers() {
+    public List<GridContainer> GetContainers() {
         throw new NotImplementedException();
     }
 
@@ -34,11 +34,11 @@ class TestGrid : IGrid {
         throw new NotImplementedException();
     }
 
-    public void InsertContainer(IGridContainer container) {
+    public void InsertContainer(GridContainer container) {
         throw new NotImplementedException();
     }
 
-    public void RemoveContainerAt(IGridContainer container) {
+    public void RemoveContainerAt(GridContainer container) {
         throw new NotImplementedException();
     }
 

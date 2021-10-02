@@ -54,7 +54,7 @@ class GridHolder : MonoBehaviour {
         }
     }
 
-    private void InitGrid(IGrid grid) {
+    private void InitGrid(SimulationGrid grid) {
         gridTiles = new GridTile[grid.Width, grid.Height];
         InitGridTiles();
     }
