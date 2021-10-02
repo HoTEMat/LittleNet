@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 class SimulationGrid : IGrid {
-    private IAutomaton automaton;
+    private IAutomaton automaton = new WireeAutomaton();
 
     private Dictionary<(int x, int y), State> grid = new Dictionary<(int x, int y), State>();
     private Dictionary<(int x, int y), State> initialGrid;
