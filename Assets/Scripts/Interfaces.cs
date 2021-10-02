@@ -89,7 +89,7 @@ public enum ILevelState {
 interface ILevelValidator {
     int InputCount { get; }
     int OutputCount { get; }
-    
+
     ILevelState ValidateStates(State[] states);
 
     State[] GetInputStates();
@@ -100,6 +100,8 @@ interface ILevelValidator {
 interface ILevel {
     IGrid Grid { get; }
     ILevelValidator Validator { get; }
+
+    ILevelState DoIteration();
 }
 
 public class Interfaces : MonoBehaviour {
