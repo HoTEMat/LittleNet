@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 53124909}
   - component: {fileID: 53124908}
   - component: {fileID: 53124910}
+  - component: {fileID: 53124911}
   m_Layer: 0
   m_Name: GridHolder
   m_TagString: Untagged
@@ -225,6 +226,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63d48461806a2748a3d529027196956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Camera: {fileID: 519420031}
+--- !u!114 &53124911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53124907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c62b1a6271bea8245ae1e9887fa216cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WhiteSprite: {fileID: 21300000, guid: d9adaae4e61ebd34aac782b49dbe4a65, type: 3}
+  ContainerColor: {r: 0.7169812, g: 0.6385191, b: 0.6385191, a: 1}
   Camera: {fileID: 519420031}
 --- !u!1 &192349362
 GameObject:

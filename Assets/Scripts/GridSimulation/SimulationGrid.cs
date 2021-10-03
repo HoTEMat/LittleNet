@@ -80,7 +80,7 @@ class SimulationGrid {
     /// <summary>
     /// Removes the container, also removing it from the mapping.
     /// </summary>
-    public void RemoveContainerAt(GridContainer container) {
+    public void RemoveContainer(GridContainer container) {
         containers.Remove(container);
 
         // TODO: mapping rotation in the future
