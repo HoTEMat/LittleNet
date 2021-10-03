@@ -82,4 +82,16 @@ class GridContainer : ICloneable<GridContainer> {
 
         return clone;
     }
+
+    // Reverse mapping.
+    public bool GetPortOuterPlacement(IPort port, out int outX, out int outY) {
+        foreach (var pos in RelativePortPlacement.Keys) {
+            if (RelativePortPlacement[pos] == port) {
+                (outX, outY) = pos;
+                return true;
+            }
+        }
+        outX = outY = 0;
+        return false;
+    }
 }

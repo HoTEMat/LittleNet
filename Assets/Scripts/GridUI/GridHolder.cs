@@ -102,7 +102,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
                 GridTile tile = Instantiate<GridTile>(GridTilePrefab, transform);
                 tile.X = gridX;
                 tile.Y = gridY;
-                tile.SetTopLeft(GridToWorldPosition(gridX, gridY, 0));
+                tile.SetTopLeft(CoordinateToPosition(gridX, gridY, 0));
                 tile.OnClicked += clickHandler;
                 tile.OnMouseInside += mouseOverTileHandler;
                 gridTiles[gridX, gridY] = tile;
@@ -162,12 +162,12 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         }
     }
 
-    public Vector3 GridToWorldPosition(int gridX, int gridY, float z) {
+    public Vector3 CoordinateToPosition(int gridX, int gridY, float z) {
         (float tw, float th) = GetTileSize();
         return new Vector3((tw + gridLineWidth) * gridX, -(th + gridLineWidth) * gridY, z);
     }
 
-    public (int gridX, int gridY) WorldToGridPosition(Vector3 worldPos) {
+    public (int gridX, int gridY) PositionToCoordinate(Vector3 worldPos) {
         (float tw, float th) = GetTileSize();
         return ((int)(worldPos.x / (tw + gridLineWidth)), -(int)(worldPos.y / (th + gridLineWidth)));
     }
