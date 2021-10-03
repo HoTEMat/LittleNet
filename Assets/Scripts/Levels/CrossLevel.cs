@@ -17,7 +17,7 @@ static partial class Levels {
 class CrossLevelValidator : CalendarValidator {
 
     int caseN = 0;
-    static List<(bool in0, bool in1, bool out1, bool out0)> cases = new List<(bool, bool, bool, bool)> {
+    static List<(bool in0, bool in1, bool out0, bool out1)> cases = new List<(bool, bool, bool, bool)> {
         (false, false, false, false),
         (true, false, false, true),
         (false, true, true, false),
