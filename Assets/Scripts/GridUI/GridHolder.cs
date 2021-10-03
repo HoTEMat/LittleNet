@@ -144,7 +144,10 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     }
 
     private void ApplyTool(UITool tool, GridTile tile) {
-        if (ToolPicker.CurrentTool is PlaceTileTool placeTile) {
+        if (PlayManager.State != PlayState.Stopped)
+            return;
+        
+        if (tool is PlaceTileTool placeTile) {
             Level.Grid.Set(tile.X, tile.Y, placeTile.TileType);
         }
     }

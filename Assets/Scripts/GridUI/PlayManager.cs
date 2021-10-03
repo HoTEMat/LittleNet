@@ -41,8 +41,7 @@ public class PlayManager : MonoBehaviour {
         buttonTransform.sizeDelta = new Vector2(buttonSize, buttonSize);
         buttonTransform.anchoredPosition = new Vector2(width - backgroundPosition.anchoredPosition.y - buttonSize * (5/2f) - buttonSpacing, backgroundPosition.anchoredPosition.y);
 
-        if (State == PlayState.Stopped)
-            stopButton.interactable = false;
+        stopButton.interactable = State != PlayState.Stopped;
     }
 
     private void PlayPausePressed() {
@@ -50,7 +49,6 @@ public class PlayManager : MonoBehaviour {
             case PlayState.Paused:
             case PlayState.Stopped:
                 State = PlayState.Playing;
-                stopButton.interactable = true;
                 break;
             case PlayState.Playing:
                 State = PlayState.Paused;
