@@ -32,7 +32,8 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         public Sprite Color;
     }
     [SerializeField] private StateToSpriteItem[] StateToSpriteArray;
-    public IReadOnlyDictionary<State, Sprite> StateToSprite;
+    // TODO: move the mapping to code
+    public static IReadOnlyDictionary<State, Sprite> StateToSprite;
     public void OnBeforeSerialize() {
         // Do nothing.
     }
@@ -46,13 +47,19 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
     private void Start() {
         Level = Levels.NotLevel();
-        //TODORemoveThis();
+        //TODORemoveThis2();
         InitGrid(Level.Grid);
     }
 
     //private void TODORemoveThis() {
     //    var innerGrid = Levels.CrossLevel().Grid;
     //    var c = new GridContainer(0, 0, innerGrid, Rotation.By0);
+    //    Level.Grid.InsertContainer(c);
+    //}
+    //private void TODORemoveThis2() {
+    //    var g = new SimulationGrid(30, 30, "Test grid");
+    //    g.AddPort(new Port())
+    //    var c = new GridContainer(0, 0, g, Rotation.By0);
     //    Level.Grid.InsertContainer(c);
     //}
 

@@ -73,7 +73,7 @@ class ContainerMovement : MonoBehaviour
         Vector3 containerTargetWorldPos = worldMousePos - draggingMouseOffset;
 
         Vector3 containerWorldPos = grid.CoordinateToPosition(c.GridContainer.X, c.GridContainer.Y, 0);
-        if ((containerWorldPos - containerTargetWorldPos).magnitude < 0.1)
+        if ((containerWorldPos - containerTargetWorldPos).magnitude < 0.2)
             return;
 
         (int containerTargetX, int containerTargetY) = grid.PositionToCoordinate(containerTargetWorldPos);

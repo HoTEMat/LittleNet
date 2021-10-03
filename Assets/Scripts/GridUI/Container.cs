@@ -13,10 +13,10 @@ class Container : MonoBehaviour
     public event Action<Container> OnMouseRaised;
     public GridContainer GridContainer { get; set; }
 
-    private List<GridTile> ports;
+    private List<(GridTile, IPort)> ports;
 
     private void Start() {
-        ports = new List<GridTile>();
+        ports = new List<(GridTile, IPort)>();
     }
 
     public static Container InstantiateContainer(GridContainer c) {
@@ -49,7 +49,14 @@ class Container : MonoBehaviour
             tile.SetTopLeft(new Vector3(relativeX, relativeY, -0.1f));
             tile.ShowColor(State.WireOn);
 
-            ports.Add(tile);
+            ports.Add((tile, port));
+        }
+    }
+
+    private void Update() {
+        foreach ((GridTile tile, IPort port) in ports) {
+            State s = GridContainer.Grid.Get(port.InnerX, port.InnerY);
+            tile.ShowSprite(GridHolder.StateToSprite[s]);
         }
     }
 
