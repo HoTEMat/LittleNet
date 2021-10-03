@@ -22,4 +22,8 @@ class Container : MonoBehaviour
     private void OnMouseDrag() {
         OnDragged?.Invoke(this);
     }
+
+    private void OnMouseUp() {
+        Debug.Log("up");
+    }
 }
