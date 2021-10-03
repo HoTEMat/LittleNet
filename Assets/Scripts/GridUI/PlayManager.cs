@@ -23,8 +23,6 @@ public class PlayManager : MonoBehaviour {
         float width = camera.scaledPixelWidth;
         float height = camera.scaledPixelHeight;
         
-        float c = 0.085f;
-        
         float buttonSize = backgroundPosition.sizeDelta.y * 0.7f;
         float buttonSpacing = buttonSize * 0.25f;
 
