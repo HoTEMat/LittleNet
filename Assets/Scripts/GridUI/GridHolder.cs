@@ -15,7 +15,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
     private int playSpeed = 10;
     private int playCount = 0; // TODO: do interfacu
-    
+
     public bool ShowTileTextures { get; set; }
 
     [SerializeField]
@@ -60,15 +60,15 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
             if (playCount % playSpeed == 0)
                 Level.DoIteration();
         }
-        
+
         if (PlayManager.State == PlayState.Stopped && Level.GetIteration != 0)
             Level.Reset();
-        
+
         if (Input.GetKeyDown(KeyCode.Space)) {
             Level.DoIteration();
             PlayManager.State = PlayState.Paused;
         }
-        
+
         if (!Input.GetMouseButton(0)) {
             activeTool = null;
         }
@@ -93,20 +93,19 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
                 gridTiles[gridX, gridY] = tile;
 
                 IPort port = Level.Grid.GetPortAt(tile.X, tile.Y);
-                if (port != null)
-                {
+                if (port != null) {
                     var background = Instantiate(GridBackgroundPrefab, transform);
                     var position = background.GetComponent<RectTransform>();
-                    
+
                     if (port is InputPort) background.GetComponent<SpriteRenderer>().color = Color.green;
                     else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.red;
                     else background.GetComponent<SpriteRenderer>().color = Color.blue;
 
                     position.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, 1);
-                    
+
                     float c = 1.15f;
                     position.localScale = new Vector3(c, c, c);
-                    
+
                     gridBackgrounds.Add(background);
                 }
             }
@@ -132,7 +131,12 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
             return;
         if (ToolPicker.CurrentTool == null)
             return;
-        activeTool = ToolPicker.CurrentTool;
+
+        if (ToolPicker.CurrentTool is PlaceTileTool pt && pt.TileType == Level.Grid.Get(tile.X, tile.Y))
+            activeTool = new PlaceTileTool(State.Nothing);
+        else
+            activeTool = ToolPicker.CurrentTool;
+
         ApplyTool(activeTool, tile);
     }
     private void HandleMouseOverTile(GridTile tile) {
@@ -146,10 +150,10 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     private void ApplyTool(UITool tool, GridTile tile) {
         if (PlayManager.State != PlayState.Stopped)
             return;
-        
+
         if (Level.Grid.GetPortAt(tile.X, tile.Y) != null)
             return;
-        
+
         if (tool is PlaceTileTool placeTile) {
             Level.Grid.Set(tile.X, tile.Y, placeTile.TileType);
         }

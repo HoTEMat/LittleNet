@@ -59,6 +59,7 @@ class SimulationGrid {
 
     public void AddPort(IPort port) {
         ports[(port.InnerX, port.InnerY)] = port;
+        Set(port.InnerX, port.InnerY, State.WireOff);
     }
 
     /// <summary>
