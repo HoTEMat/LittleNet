@@ -58,15 +58,15 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
             playCount++;
 
             if (playCount % playSpeed == 0)
-                Level.DoIteration();
+                DoIteration();
         }
 
         if (PlayManager.State == PlayState.Stopped && Level.GetIteration != 0)
             Level.Reset();
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Level.DoIteration();
             PlayManager.State = PlayState.Paused;
+            DoIteration();
         }
 
         if (!Input.GetMouseButton(0)) {
@@ -78,6 +78,16 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         gridTiles = new GridTile[grid.Width, grid.Height];
         InitGridTiles();
     }
+
+    private void DoIteration() {
+        var state = Level.DoIteration();
+
+        // TODO: handle success / failure
+        if (state != ILevelState.Nothing) {
+            PlayManager.State = PlayState.Paused;
+        }
+    }
+
 
     private void InitGridTiles() {
         var clickHandler = new Action<GridTile>(HandleTileClicked);

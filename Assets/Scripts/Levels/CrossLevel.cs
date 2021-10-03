@@ -27,6 +27,11 @@ class CrossLevelValidator : CalendarValidator {
     public override int InputCount => 2;
     public override int OutputCount => 2;
 
+    public override void Reset() {
+        base.Reset();
+        caseN = 0;
+    }
+
 
     public override State[] GetInputStates() {
         var c = cases[caseN];
@@ -35,11 +40,14 @@ class CrossLevelValidator : CalendarValidator {
 
     public override void MoveToNextInputState() {
         if (Iterations % 200 == 0) {
-            if (caseN < cases.Count) {
-                Expect(100, outputs =>
-                    (outputs[0] == State.WireOn) == cases[caseN].out0 && (outputs[1] == State.WireOn) == cases[caseN].out1
-                    ? ILevelState.Nothing
-                    : ILevelState.Failure    
+             if (caseN < cases.Count) {
+                Expect(100, outputs => {
+                    var c = cases[caseN++];
+                    if ((outputs[0] == State.WireOn) == c.out0 && (outputs[1] == State.WireOn) == c.out1) { 
+                        return ILevelState.Nothing;
+                    }
+                    return ILevelState.Failure;
+                }
                 );
             } else {
                 Succeed();
