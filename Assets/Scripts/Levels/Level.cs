@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 class Level : ILevel {
@@ -49,6 +50,7 @@ class Level : ILevel {
         }
 
         iteration++;
+        Debug.Print($"iteration: {iteration}");
 
         Grid.DoIteration();
         Grid.DoSwap();

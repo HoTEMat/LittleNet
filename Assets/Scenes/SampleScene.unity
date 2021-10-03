@@ -427,6 +427,7 @@ MonoBehaviour:
   backgroundPosition: {fileID: 1620360249}
   backgroundBorderPosition: {fileID: 1733394565}
   GridHolder: {fileID: 53124908}
+  toolPickerBackgroundPrefab: {fileID: 6655675999514218308, guid: 82a329bf7cbe9173e92c8bc72a21f096, type: 3}
   buttonPrefab: {fileID: 3110492723994685975, guid: 745c9e37568c9514fba0f4ca53ffc8b6, type: 3}
 --- !u!114 &858196697
 MonoBehaviour:

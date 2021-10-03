@@ -68,15 +68,15 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
             playCount++;
 
             if (playCount % playSpeed == 0)
-                Level.DoIteration();
+                DoIteration();
         }
 
         if (PlayManager.State == PlayState.Stopped && Level.GetIteration != 0)
             Level.Reset();
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Level.DoIteration();
             PlayManager.State = PlayState.Paused;
+            DoIteration();
         }
 
         if (!Input.GetMouseButton(0)) {
@@ -88,6 +88,16 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         gridTiles = new GridTile[grid.Width, grid.Height];
         InitGridTiles();
     }
+
+    private void DoIteration() {
+        var state = Level.DoIteration();
+
+        // TODO: handle success / failure
+        if (state != ILevelState.Nothing) {
+            PlayManager.State = PlayState.Paused;
+        }
+    }
+
 
     private void InitGridTiles() {
         var clickHandler = new Action<GridTile>(HandleTileClicked);
@@ -107,13 +117,13 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
                     var background = Instantiate(GridBackgroundPrefab, transform);
                     var position = background.GetComponent<RectTransform>();
 
-                    if (port is InputPort) background.GetComponent<SpriteRenderer>().color = Color.green;
-                    else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.red;
-                    else background.GetComponent<SpriteRenderer>().color = Color.blue;
+                    if (port is InputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
+                    else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
+                    else background.GetComponent<SpriteRenderer>().color = Color.white;
 
                     position.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, 1);
 
-                    float c = 1.15f;
+                    float c = 1.06f;
                     position.localScale = new Vector3(c, c, c);
 
                     gridBackgrounds.Add(background);
