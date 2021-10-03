@@ -147,6 +147,9 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         if (PlayManager.State != PlayState.Stopped)
             return;
         
+        if (Level.Grid.GetPortAt(tile.X, tile.Y) != null)
+            return;
+        
         if (tool is PlaceTileTool placeTile) {
             Level.Grid.Set(tile.X, tile.Y, placeTile.TileType);
         }
