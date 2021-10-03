@@ -26,12 +26,11 @@ class ContainerMovement : MonoBehaviour
         var dragHandler = new Action<Container>(HandleContainerDragged);
         var mouseUpHandler = new Action<Container>(HandleMouseUp);
         foreach (GridContainer c in grid.Level.Grid.GetContainers()) {
-            Container container = Container.InstantiateContainer(c);
+            Container container = Container.InstantiateContainer(c, GridTilePrefab);
             container.OnClicked += clickHandler;
             container.OnDragged += dragHandler;
             container.OnMouseRaised += mouseUpHandler;
             container.transform.parent = transform;
-            container.GridTilePrefab = GridTilePrefab;
             var sr = container.GetComponent<SpriteRenderer>();
             sr.color = ContainerColor;
             sr.sprite = WhiteSprite;

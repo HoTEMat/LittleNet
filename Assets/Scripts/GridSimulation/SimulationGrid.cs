@@ -5,7 +5,6 @@ using UnityEngine;
 
 class SimulationGrid {
     private IAutomaton automaton = new WireeAutomaton();
-    public Guid Guid { get; } = Guid.NewGuid();
 
     public bool CanSimulate { get; private set; } = false;
     public GatePrototype Prototype { get; }
@@ -61,6 +60,11 @@ class SimulationGrid {
     public void AddPort(IPort port) {
         ports[(port.InnerX, port.InnerY)] = port;
         Set(port.InnerX, port.InnerY, State.WireOff);
+    }
+
+    public void AddPort(int innerX, int innerY) {
+        Port p = new Port(this, innerX, innerY);
+        AddPort(p);
     }
 
     /// <summary>
@@ -194,7 +198,7 @@ class SimulationGrid {
             grid = grid.ToDictionary(kv => kv.Key, kv => kv.Value),
         };
 
-        clone.ports = ports.ToDictionary(kv => kv.Key, kv => kv.Value is Port p ? p.Clone(newContainer) : kv.Value.Clone(clone));
+        clone.ports = ports.ToDictionary(kv => kv.Key, kv => kv.Value.Clone(clone));
         clone.containers = clone.containerMapping.Select(kv => kv.Value).ToList();
         return clone;
     }

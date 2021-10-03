@@ -32,6 +32,8 @@ class GridContainer : ICloneable<GridContainer> {
 
         X = x;
         Y = y;
+
+        PlacePorts();
     }
 
     private void PlacePorts() {

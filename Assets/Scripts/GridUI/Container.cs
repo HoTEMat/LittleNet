@@ -6,8 +6,6 @@ using UnityEngine;
 
 class Container : MonoBehaviour
 {
-    public GridTile GridTilePrefab { get; set; }
-
     public event Action<Container> OnClicked;
     public event Action<Container> OnDragged;
     public event Action<Container> OnMouseRaised;
@@ -15,11 +13,7 @@ class Container : MonoBehaviour
 
     private List<(GridTile, IPort)> ports;
 
-    private void Start() {
-        ports = new List<(GridTile, IPort)>();
-    }
-
-    public static Container InstantiateContainer(GridContainer c) {
+    public static Container InstantiateContainer(GridContainer c, GridTile gridTilePrefab) {
         var container = new GameObject();
         container.name = "Container";
         container.transform.localScale = new Vector3(c.OuterWidth, c.OuterHeight, 1);
@@ -32,12 +26,13 @@ class Container : MonoBehaviour
         Container containerController = container.AddComponent<Container>();
         containerController.GridContainer = c;
 
-        containerController.InstantiatePorts();
+        containerController.InstantiatePorts(gridTilePrefab);
 
         return containerController;
     }
 
-    private void InstantiatePorts() {
+    private void InstantiatePorts(GridTile gridTilePrefab) {
+        ports = new List<(GridTile, IPort)>();
         foreach (IPort port in GridContainer.Grid.GetPorts()) {
             if (!GridContainer.GetPortOuterPlacement(port, out int gridX, out int gridY))
                 continue;
@@ -45,9 +40,9 @@ class Container : MonoBehaviour
             float relativeX = gridX * 1f;
             float relativeY = gridY * 1f;
 
-            GridTile tile = Instantiate(GridTilePrefab, transform);
-            tile.SetTopLeft(new Vector3(relativeX, relativeY, -0.1f));
-            tile.ShowColor(State.WireOn);
+            GridTile tile = Instantiate(gridTilePrefab, transform);
+            tile.transform.localScale = new Vector3(1f / GridContainer.OuterWidth, 1f / GridContainer.OuterHeight, 1);
+            tile.SetTopLeft(new Vector3(relativeX, -relativeY, -0.1f));
 
             ports.Add((tile, port));
         }
@@ -61,7 +56,7 @@ class Container : MonoBehaviour
     }
 
     public void SetTopLeft(Vector3 topLeft) {
-        Vector3 scale = transform.localScale;
+        Vector3 scale = transform.lossyScale;
         (float w, float h) = (scale.x, scale.y);
         transform.position = new Vector3(topLeft.x + w / 2, topLeft.y - h / 2, topLeft.z);
     }

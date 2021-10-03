@@ -58,7 +58,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     //}
     //private void TODORemoveThis2() {
     //    var g = new SimulationGrid(30, 30, "Test grid");
-    //    g.AddPort(new Port())
+    //    g.AddPort(0, 1);
     //    var c = new GridContainer(0, 0, g, Rotation.By0);
     //    Level.Grid.InsertContainer(c);
     //}

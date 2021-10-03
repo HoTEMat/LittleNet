@@ -41,7 +41,7 @@ class GridTile : MonoBehaviour {
     }
 
     public void SetTopLeft(Vector3 topLeft) {
-        Vector3 scale = transform.localScale;
+        Vector3 scale = transform.lossyScale;
         (float w, float h) = (scale.x, scale.y);
         transform.localPosition = new Vector3(topLeft.x + w / 2, topLeft.y - h / 2, topLeft.z);
     }

@@ -2,12 +2,10 @@ using System.Diagnostics;
 using System.Linq;
 
 class Port : IPort {
-    private readonly GridContainer Container;
     private readonly SimulationGrid Grid;
 
-    public Port(GridContainer cont, int x, int y) {
-        Container = cont;
-        Grid = cont.Grid;
+    public Port(SimulationGrid grid, int x, int y) {
+        Grid = grid;
 
         InnerX = x;
         InnerY = y;
@@ -46,12 +44,9 @@ class Port : IPort {
     }
 
 
-    public Port Clone(GridContainer newGridCont) {
-        var clone = new Port(newGridCont, InnerX, InnerY);
-        return clone;
-    }
     public IPort Clone(SimulationGrid newGrid) {
-        throw new System.InvalidOperationException();
+        var clone = new Port(newGrid, InnerX, InnerY);
+        return clone;
     }
 
 
