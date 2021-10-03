@@ -35,8 +35,8 @@ class WireeAutomaton : IAutomaton {
 
             // Wire
             case State.WireOff:
-                return vertical.Any(v => v.EmitsVertical())
-                    || horizontal.Any(h => h.EmitsHorizontal())
+                return vertical.Any(v => v.EmitsVertical() || v == State.NotOn)
+                    || horizontal.Any(h => h.EmitsHorizontal() || h == State.NotOn)
                         ? State.WireOn
                         : center;
             case State.WireOn:
@@ -48,13 +48,15 @@ class WireeAutomaton : IAutomaton {
 
             // Lamp
             case State.LampOff:
-                return neighbors.Any(n => n == State.WireOn)
+                return vertical.Any(v => v.EmitsVertical())
+                    || horizontal.Any(h => h.EmitsHorizontal())
                     ? State.LampOn
-                    : center;
+                    : State.LampOff;
             case State.LampOn:
-                return neighbors.All(n => !n.IsWire() || n == State.WireOff)
+                return vertical.All(v => !v.EmitsVertical())
+                    || horizontal.All(h => !h.EmitsHorizontal())
                     ? State.LampDead
-                    : center;
+                    : State.LampOn;
             case State.LampDead: return State.LampOff;
 
             // Negator
@@ -79,11 +81,11 @@ class WireeAutomaton : IAutomaton {
                 center = center.CrossSetOff(true);
             } else if (center.EmitsHorizontal()) {
                 // -- is on
-                if (horizontal.Any(h => h.DeadHorizontal() || h == State.LampDead))
+                if (horizontal.Any(h => h.DeadHorizontal()))
                     center = center.CrossSetDead(true);
             } else {
                 // -- is off
-                if (horizontal.Any(h => h.EmitsHorizontal() || h == State.LampOn))
+                if (horizontal.Any(h => h.EmitsHorizontal()))
                     center = center.CrossSetOn(true);
             }
         }
@@ -94,11 +96,11 @@ class WireeAutomaton : IAutomaton {
                 center = center.CrossSetOff(false);
             } else if (center.EmitsVertical()) {
                 // | is on
-                if (vertical.Any(v => v.DeadVertical() || v == State.LampDead))
+                if (vertical.Any(v => v.DeadVertical()))
                     center = center.CrossSetDead(false);
             } else {
                 // | is off
-                if (vertical.Any(v => v.EmitsVertical() || v == State.LampOn))
+                if (vertical.Any(v => v.EmitsVertical()))
                     center = center.CrossSetOn(false);
             }
         }
@@ -185,7 +187,6 @@ static class StateEx {
     public static bool EmitsVertical(this State state) {
         switch (state) {
             case State.WireOn:
-            case State.NotOn:
             case State.CrossHOnVOn:
             case State.CrossHOffVOn:
             case State.CrossHDeadVOn:
@@ -199,7 +200,6 @@ static class StateEx {
     public static bool EmitsHorizontal(this State state) {
         switch (state) {
             case State.WireOn:
-            case State.NotOn:
             case State.CrossHOnVOff:
             case State.CrossHOnVDead:
             case State.CrossHOnVOn:
@@ -214,7 +214,6 @@ static class StateEx {
     public static bool DeadVertical(this State state) {
         switch (state) {
             case State.WireDead:
-            case State.NotDead:
             case State.CrossHOnVDead:
             case State.CrossHDeadVDead:
             case State.CrossHOffVDead:
@@ -227,7 +226,6 @@ static class StateEx {
     public static bool DeadHorizontal(this State state) {
         switch (state) {
             case State.WireDead:
-            case State.NotDead:
             case State.CrossHDeadVDead:
             case State.CrossHDeadVOff:
             case State.CrossHDeadVOn:
