@@ -97,13 +97,13 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
                     var background = Instantiate(GridBackgroundPrefab, transform);
                     var position = background.GetComponent<RectTransform>();
 
-                    if (port is InputPort) background.GetComponent<SpriteRenderer>().color = Color.green;
-                    else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.red;
-                    else background.GetComponent<SpriteRenderer>().color = Color.blue;
+                    if (port is InputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
+                    else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
+                    else background.GetComponent<SpriteRenderer>().color = Color.white;
 
                     position.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, 1);
 
-                    float c = 1.15f;
+                    float c = 1.06f;
                     position.localScale = new Vector3(c, c, c);
 
                     gridBackgrounds.Add(background);

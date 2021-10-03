@@ -11,11 +11,16 @@ class ToolPicker : MonoBehaviour {
     public RectTransform backgroundBorderPosition;
     public GridHolder GridHolder;
     
+    public GameObject toolPickerBackgroundPrefab;
+    private GameObject toolPickerBackground;
+    
     [SerializeField] private Button buttonPrefab;
 
     private List<Button> buttonPositions = new List<Button>();
 
     private void Start() {
+        toolPickerBackground = Instantiate(toolPickerBackgroundPrefab, transform);
+        
         foreach (State state in Enum.GetValues(typeof(State))) {
             if (!state.IsPlaceable())
                 continue;
@@ -30,14 +35,34 @@ class ToolPicker : MonoBehaviour {
     }
 
     private void HandleStateSelected(State state) {
-        Debug.Log(state);
         CurrentTool = new PlaceTileTool(state);
+        
+        int i = 0;
+        foreach (State s in Enum.GetValues(typeof(State))) {
+            if (!s.IsPlaceable())
+                continue;
+
+            if (s == state) {
+                var t = toolPickerBackground.GetComponent<RectTransform>();
+                var m = buttonPositions[i].GetComponent<RectTransform>();
+
+                t.sizeDelta = m.sizeDelta * 1.25f;
+                t.anchoredPosition = m.anchoredPosition;
+                break;
+            }
+
+            i++;
+        }
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape)) {
             CurrentTool = null;
+        }
         
+        if (CurrentTool == null)
+            toolPickerBackground.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
+
         float width = camera.scaledPixelWidth;
         float height = camera.scaledPixelHeight;
         
