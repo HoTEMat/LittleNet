@@ -16,6 +16,7 @@
 
     public virtual void Reset() {
         Iterations = 0;
+        validators.Clear();
     }
 
     protected void Expect(int after, DelayedValidator validator) {

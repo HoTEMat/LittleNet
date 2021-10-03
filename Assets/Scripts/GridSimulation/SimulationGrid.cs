@@ -5,6 +5,7 @@ using UnityEngine;
 
 class SimulationGrid {
     private IAutomaton automaton = new WireeAutomaton();
+    public Guid Guid { get; } = Guid.NewGuid();
 
     public bool CanSimulate { get; private set; } = false;
     public GatePrototype Prototype { get; }

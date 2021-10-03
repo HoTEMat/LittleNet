@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 
 class Level : ILevel {
-    private IPort[] OutputPorts;
 
+    private IEnumerable<IPort> outputPorts => Grid.GetPorts().Where(p => p is OutputPort);
     private int iteration;
 
     public Level(ILevelValidator validator, int width, int height) {
@@ -16,18 +16,12 @@ class Level : ILevel {
         for (int i = 1; i <= Validator.InputCount; i++)
             Grid.AddPort(new InputPort(0, i * inputSpacing, Validator, i - 1));
 
-        List<IPort> outputPortsList = new List<IPort>();
-
         // create evenly spaced output ports
         int outputSpacing = height / (Validator.OutputCount + 1);
         for (int i = 1; i <= Validator.InputCount; i++) {
             var port = new OutputPort(Grid, width - 1, i * outputSpacing);
-
             Grid.AddPort(port);
-            outputPortsList.Add(port);
         }
-
-        OutputPorts = outputPortsList.ToArray();
     }
 
     public Level(ILevelValidator validator, int width, int height, IEnumerable<InputPort> inputs, IEnumerable<OutputPort> outputs) {
@@ -58,7 +52,7 @@ class Level : ILevel {
         Validator.MoveToNextInputState();
 
         List<State> outputStatesList = new List<State>();
-        foreach (var t in OutputPorts)
+        foreach (var t in outputPorts)
             outputStatesList.Add(t.GetState());
 
         return Validator.ValidateStates(outputStatesList.ToArray());
