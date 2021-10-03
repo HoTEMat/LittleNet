@@ -8,6 +8,7 @@ class ToolPicker : MonoBehaviour {
     public UITool CurrentTool { get; private set; }
     public Camera camera;
     public RectTransform backgroundPosition;
+    public RectTransform backgroundBorderPosition;
     public GridHolder GridHolder;
     
     [SerializeField] private Button buttonPrefab;
@@ -41,9 +42,13 @@ class ToolPicker : MonoBehaviour {
         float height = camera.scaledPixelHeight;
         
         float c = 0.085f;
+        float d = 1.1f;
         
-        backgroundPosition.sizeDelta = new Vector2(width, height * c);
+        backgroundPosition.sizeDelta = new Vector2(width / d, height * c / d);
         backgroundPosition.anchoredPosition = new Vector2(0, -height * c / 2);
+        
+        backgroundBorderPosition.sizeDelta = new Vector2(width * d, height * c);
+        backgroundBorderPosition.anchoredPosition = new Vector2(0, -height * c / 2);
         
         float buttonSize = backgroundPosition.sizeDelta.y * 0.7f;
         float buttonSpacing = buttonSize * 0.25f;
