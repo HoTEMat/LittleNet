@@ -21,7 +21,7 @@ class Level : ILevel {
 
         // create evenly spaced output ports
         int outputSpacing = height / (Validator.OutputCount + 1);
-        for (int i = 1; i <= Validator.InputCount; i++) {
+        for (int i = 1; i <= Validator.OutputCount; i++) {
             var port = new OutputPort(Grid, width - 1, i * outputSpacing);
             Grid.AddPort(port);
         }

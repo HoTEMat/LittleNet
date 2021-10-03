@@ -1,74 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 static partial class Levels {
     public static Level CrossLevel() {
-
-        var level = new Level(new CrossLevelValidator(), 15, 10, "Cross level", "A very nice cross level.");
+        var level = new Level(
+            new StrictCalendalValidator(
+                new List<List<bool>> {
+                    new List<bool> {false, false},
+                    new List<bool> {true, false},
+                    new List<bool> {false, true},
+                    new List<bool> {true, true},
+                },
+                new List<List<bool>> {
+                    new List<bool> {false, false},
+                    new List<bool> {false, true},
+                    new List<bool> {true, false},
+                    new List<bool> {true, true},
+                }
+            ), 15, 10, "Cross level", "A very nice cross level.");
         return level;
     }
 }
 
-class CrossLevelValidator : CalendarValidator {
+class StrictCalendalValidator : CalendarValidator {
+    private int testInterval;
+    private int testCaseN;
 
-    private int testCaseN = 0;
-    private int testCaseCurrent;
-    private const int totalTestCases = 16;
+    private List<List<bool>> inputs;
+    private List<List<bool>> outputs;
+    
+    private int repeat;
 
-    private Random r = new Random();
 
-    const int testInterval = 100;
+    public StrictCalendalValidator(List<List<bool>> inputs, List<List<bool>> outputs, int repeat = 2, int testInterval = 50) {
+        InputCount = inputs[0].Count;
+        OutputCount = outputs[0].Count;
+        
+        this.repeat = repeat;
 
-    static List<(bool in0, bool in1, bool out0, bool out1)> cases = new List<(bool, bool, bool, bool)> {
-        (false, false, false, false),
-        (true, false, false, true),
-        (false, true, true, false),
-        (true, true, true, true),
-    };
+        this.inputs = inputs;
+        this.outputs = outputs;
 
-    public override int InputCount => 2;
-    public override int OutputCount => 2;
-
+        this.testInterval = testInterval;
+    }
+    
+    public override int InputCount { get; }
+    public override int OutputCount { get; }
+    
     public override void Reset() {
         base.Reset();
         testCaseN = 0;
     }
-
+    
     public override bool[] GetInputs() {
-        var c = cases[testCaseCurrent];
-        return new[]{ c.in0, c.in1 };
+        return inputs[testCaseN % inputs.Count].ToArray();
     }
-
+    
     public override void MoveToNextInputState() {
-
         if (Iterations == 0) {
             RegisterNextTest();
         }
 
         base.MoveToNextInputState();
     }
-
+    
     private void RegisterNextTest() {
-        testCaseCurrent = r.Next(0, cases.Count - 1);
-            
         Expect(testInterval, outputs => {
-            var data = cases[testCaseCurrent];
-            bool ok = data.out0 == outputs[0] && data.out1 == outputs[1];
+            var data = this.outputs[testCaseN % this.outputs.Count];
 
-            testCaseN++;
-            bool lastTest = testCaseN >= totalTestCases;
-
-            if (lastTest) {
-                return ok ? ILevelState.Success : ILevelState.Failure;
-            } else {
-                RegisterNextTest();
-                return ok ? ILevelState.Nothing : ILevelState.Failure;
+            bool ok = true;
+            for (int i = 0; i < outputs.Length; i++) {
+                if (outputs[i] != data[i])
+                    ok = false;
+                
             }
 
+            testCaseN++;
+            bool lastTest = testCaseN >= inputs.Count * repeat;
+
+            if (lastTest)
+                return ok ? ILevelState.Success : ILevelState.Failure;
+
+            RegisterNextTest();
+            return ok ? ILevelState.Nothing : ILevelState.Failure;
         });
     }
 }
