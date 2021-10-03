@@ -11,10 +11,6 @@ class Port : IPort {
 
         InnerX = x;
         InnerY = y;
-
-        var placement = cont.RelativePortPlacement.Where(kv => kv.Value == this).Single().Key;
-        OuterX = placement.x;
-        OuterY = placement.y;
     }
 
     public State GetState() {
@@ -29,7 +25,7 @@ class Port : IPort {
         State[] neighbors = new State[4];
 
         // walk neighbors
-        (int x, int y)[] offsets = {(0, -1), (0, 1), (-1, 0), (1, 0)};
+        (int x, int y)[] offsets = { (0, -1), (0, 1), (-1, 0), (1, 0) };
         foreach (var offset in offsets) {
             int x = InnerX + offset.x;
             int y = InnerY + offset.y;
@@ -38,8 +34,7 @@ class Port : IPort {
 
             if (isInside) {
                 neighbors[i] = Grid.Get(x, y);
-            }
-            else {
+            } else {
                 // TODO: rotations
                 neighbors[i] = parentGrid.Get(OuterX + offset.x, OuterY + offset.y);
             }
@@ -50,7 +45,7 @@ class Port : IPort {
         return neighbors;
     }
 
-    
+
     public Port Clone(GridContainer newGridCont) {
         var clone = new Port(newGridCont, InnerX, InnerY);
         return clone;
@@ -59,9 +54,22 @@ class Port : IPort {
         throw new System.InvalidOperationException();
     }
 
+
+    /// <summary>
+    /// Placement inside the <see cref="SimulationGrid"/>
+    /// </summary>
     public int InnerX { get; }
+    /// <summary>
+    /// Placement inside the <see cref="SimulationGrid"/>
+    /// </summary>
     public int InnerY { get; }
 
-    public int OuterX { get; }
-    public int OuterY { get; }
+    /// <summary>
+    /// Placement relative to the <see cref="GridContainer"/>
+    /// </summary>
+    public int OuterX { get; set; }
+    /// <summary>
+    /// Placement relative to the <see cref="GridContainer"/>
+    /// </summary>
+    public int OuterY { get; set; }
 }
