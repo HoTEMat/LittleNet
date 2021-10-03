@@ -157,6 +157,7 @@ MonoBehaviour:
   GridLinePrefab: {fileID: 4479516905570273988, guid: b62640d7e31654e4990f956824ff438d, type: 3}
   ToolPicker: {fileID: 858196696}
   EventSystem: {fileID: 192349364}
+  PlayManager: {fileID: 858196701}
   gridLineWidth: 0.05
   GridBackgroundPrefab: {fileID: 8144017776167633163, guid: 1795d3a805e458897bf23eb91a5fe29b, type: 3}
   StateToSpriteArray:
