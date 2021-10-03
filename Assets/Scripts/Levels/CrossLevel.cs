@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 static partial class Levels {
     public static Level CrossLevel() {
 
-        int size = 10;
-        var level = new Level(new CrossLevelValidator(), size, size, "Cross level", "A very nice cross level.");
+        var level = new Level(new CrossLevelValidator(), 15, 10, "Cross level", "A very nice cross level.");
         return level;
     }
 }
 
 class CrossLevelValidator : CalendarValidator {
 
-    int testCaseN = 0;
-    const int totalTestCases = 16;
+    private int testCaseN = 0;
+    private int testCaseCurrent;
+    private const int totalTestCases = 16;
+
+    private Random r = new Random();
 
     const int testInterval = 100;
 
@@ -37,7 +39,7 @@ class CrossLevelValidator : CalendarValidator {
     }
 
     public override bool[] GetInputs() {
-        var c = cases[testCaseN];
+        var c = cases[testCaseCurrent];
         return new[]{ c.in0, c.in1 };
     }
 
@@ -51,9 +53,10 @@ class CrossLevelValidator : CalendarValidator {
     }
 
     private void RegisterNextTest() {
-
+        testCaseCurrent = r.Next(0, cases.Count - 1);
+            
         Expect(testInterval, outputs => {
-            var data = cases[testCaseN];
+            var data = cases[testCaseCurrent];
             bool ok = data.out0 == outputs[0] && data.out1 == outputs[1];
 
             testCaseN++;
