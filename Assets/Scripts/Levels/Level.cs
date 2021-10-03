@@ -7,7 +7,10 @@ class Level : ILevel {
     private IEnumerable<IPort> outputPorts => Grid.GetPorts().Where(p => p is OutputPort);
     private int iteration;
 
-    public Level(ILevelValidator validator, int width, int height) {
+    public Level(ILevelValidator validator, int width, int height, string name, string description) {
+        Name = name;
+        Description = description;
+        
         Validator = validator;
         Grid = new SimulationGrid(width, height, "Root grid");
 
@@ -34,6 +37,8 @@ class Level : ILevel {
         }
     }
 
+    public string Name { get; }
+    public string Description { get; }
     public SimulationGrid Grid { get; private set; }
 
     public ILevelValidator Validator { get; }

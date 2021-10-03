@@ -9,7 +9,7 @@ static partial class Levels {
     public static Level CrossLevel() {
 
         int size = 10;
-        var level = new Level(new CrossLevelValidator(), size, size);
+        var level = new Level(new CrossLevelValidator(), size, size, "Cross level", "A very nice cross level.");
         return level;
     }
 }
