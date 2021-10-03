@@ -1,48 +1,60 @@
+using System.Collections.Generic;
+
+
 static partial class Levels {
     public static Level NotLevel() {
-
-        var validator = new NotValidator();
-        int size = 10;
-
-        var level = new Level(validator, size, size, "Not Level", "A level that's not!");
+        var level = new Level(new NotLevelValidator(), 15, 10, "Not level", "A very nice not level.");
         return level;
     }
 }
 
-class NotValidator : ILevelValidator {
+class NotLevelValidator : CalendarValidator {
+    int testCaseN = 0;
+    const int totalTestCases = 4;
 
-    public NotValidator(int initialSwaps = 4) {
-        InitialSwaps = initialSwaps;
-    }
-    
-    public int InputCount => 1;
-    public int OutputCount => 1;
+    const int testInterval = 100;
 
-    public int InitialSwaps;
-    public int RemainingSwaps = 4;
+    static List<(bool in0, bool out0)> cases = new List<(bool, bool)> {
+        (false, true),
+        (true, false),
+    };
 
-    public bool previousOutputState = false;
-    public bool currentInputState = false;
+    public override int InputCount => 1;
+    public override int OutputCount => 1;
 
-    public ILevelState ValidateStates(State[] states) {
-        previousOutputState = states[0] == State.WireOn;
-
-        if (RemainingSwaps == 0 && previousOutputState != currentInputState)
-            return ILevelState.Success;
-        
-        return ILevelState.Nothing;
+    public override void Reset() {
+        base.Reset();
+        testCaseN = 0;
     }
 
-    public State[] GetInputStates() => new[] { currentInputState ? State.WireOn : State.WireOff };
+    public override bool[] GetInputs() {
+        var c = cases[testCaseN % 2];
+        return new[] {c.in0};
+    }
 
-    public void MoveToNextInputState() {
-        if (previousOutputState == currentInputState) {
-            RemainingSwaps -= 1;
-            currentInputState = !currentInputState;
+    public override void MoveToNextInputState() {
+        if (Iterations == 0) {
+            RegisterNextTest();
         }
+
+        base.MoveToNextInputState();
     }
 
-    public void Reset() {
-        RemainingSwaps = InitialSwaps;
+    private void RegisterNextTest() {
+        Expect(testInterval, outputs => {
+            var data = cases[testCaseN % 2];
+            bool ok = data.out0 == outputs[0];
+
+            testCaseN++;
+            bool lastTest = testCaseN >= totalTestCases;
+
+            if (lastTest) {
+                return ok ? ILevelState.Success : ILevelState.Failure;
+            }
+            else {
+                RegisterNextTest();
+                return ok ? ILevelState.Nothing : ILevelState.Failure;
+            }
+        });
     }
 }

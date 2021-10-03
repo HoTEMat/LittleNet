@@ -22,9 +22,6 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     [SerializeField]
     private float gridLineWidth = 0.01f;
 
-    public GameObject GridBackgroundPrefab;
-    private List<GameObject> gridBackgrounds = new List<GameObject>();
-
     public ILevel Level { get; private set; }
     private GridTile[,] gridTiles;
     private UITool activeTool;
@@ -48,7 +45,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     }
 
     private void Start() {
-        Level = Levels.CrossLevel();
+        Level = Levels.NotLevel();
         //TODORemoveThis();
         InitGrid(Level.Grid);
     }
@@ -105,26 +102,14 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
                 GridTile tile = Instantiate<GridTile>(GridTilePrefab, transform);
                 tile.X = gridX;
                 tile.Y = gridY;
-                tile.SetTopLeft(GridToWorldPosition(gridX, gridY, 0));
+                tile.SetTopLeft(CoordinateToPosition(gridX, gridY, 0));
                 tile.OnClicked += clickHandler;
                 tile.OnMouseInside += mouseOverTileHandler;
                 gridTiles[gridX, gridY] = tile;
 
                 IPort port = Level.Grid.GetPortAt(tile.X, tile.Y);
                 if (port != null) {
-                    var background = Instantiate(GridBackgroundPrefab, transform);
-                    var position = background.GetComponent<RectTransform>();
-
-                    if (port is InputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
-                    else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
-                    else background.GetComponent<SpriteRenderer>().color = Color.white;
-
-                    position.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, 1);
-
-                    float c = 1.06f;
-                    position.localScale = new Vector3(c, c, c);
-
-                    gridBackgrounds.Add(background);
+                    tile.MarkPort(port);
                 }
             }
         }
@@ -177,12 +162,12 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
         }
     }
 
-    public Vector3 GridToWorldPosition(int gridX, int gridY, float z) {
+    public Vector3 CoordinateToPosition(int gridX, int gridY, float z) {
         (float tw, float th) = GetTileSize();
         return new Vector3((tw + gridLineWidth) * gridX, -(th + gridLineWidth) * gridY, z);
     }
 
-    public (int gridX, int gridY) WorldToGridPosition(Vector3 worldPos) {
+    public (int gridX, int gridY) PositionToCoordinate(Vector3 worldPos) {
         (float tw, float th) = GetTileSize();
         return ((int)(worldPos.x / (tw + gridLineWidth)), -(int)(worldPos.y / (th + gridLineWidth)));
     }
