@@ -22,9 +22,6 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     [SerializeField]
     private float gridLineWidth = 0.01f;
 
-    public GameObject GridBackgroundPrefab;
-    private List<GameObject> gridBackgrounds = new List<GameObject>();
-
     public ILevel Level { get; private set; }
     private GridTile[,] gridTiles;
     private UITool activeTool;
@@ -112,19 +109,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
                 IPort port = Level.Grid.GetPortAt(tile.X, tile.Y);
                 if (port != null) {
-                    var background = Instantiate(GridBackgroundPrefab, transform);
-                    var position = background.GetComponent<RectTransform>();
-
-                    if (port is InputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
-                    else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.white;
-                    else background.GetComponent<SpriteRenderer>().color = Color.white;
-
-                    position.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, 1);
-
-                    float c = 1.06f;
-                    position.localScale = new Vector3(c, c, c);
-
-                    gridBackgrounds.Add(background);
+                    tile.MarkPort(port);
                 }
             }
         }

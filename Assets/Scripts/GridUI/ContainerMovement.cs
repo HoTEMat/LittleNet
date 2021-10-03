@@ -25,11 +25,14 @@ class ContainerMovement : MonoBehaviour
         var dragHandler = new Action<Container>(HandleContainerDragged);
         var mouseUpHandler = new Action<Container>(HandleMouseUp);
         foreach (GridContainer c in grid.Level.Grid.GetContainers()) {
-            Container container = InstantiateContainer(c.OuterWidth, c.OuterHeight);
+            Container container = Container.InstantiateContainer(c);
             container.OnClicked += clickHandler;
             container.OnDragged += dragHandler;
             container.OnMouseRaised += mouseUpHandler;
-            container.GridContainer = c;
+            container.transform.parent = transform;
+            var sr = container.GetComponent<SpriteRenderer>();
+            sr.color = ContainerColor;
+            sr.sprite = WhiteSprite;
             containers.Add(container);
         }
         UpdateContainersPositions();
@@ -48,24 +51,6 @@ class ContainerMovement : MonoBehaviour
         foreach (Container c in containers) {
             c.SetTopLeft(grid.GridToWorldPosition(c.GridContainer.X, c.GridContainer.Y, -1));
         }
-    }
-
-    private Container InstantiateContainer(float width, float height) {
-        var container = new GameObject();
-        container.name = "Container";
-        container.transform.parent = transform;
-        container.transform.localScale = new Vector3(width, height, 1);
-
-        SpriteRenderer sr = container.AddComponent<SpriteRenderer>();
-        sr.color = ContainerColor;
-        sr.sprite = WhiteSprite;
-
-        BoxCollider bc = container.AddComponent<BoxCollider>();
-        bc.isTrigger = true;
-
-        Container containerController = container.AddComponent<Container>();
-
-        return containerController;
     }
 
     private Container draggedContainer;

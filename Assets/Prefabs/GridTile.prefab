@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WhiteSprite: {fileID: 21300000, guid: c37f3d9de2c582744872ed8e7cbd845e, type: 3}
+  PortBackgroundPrefab: {fileID: 8144017776167633163, guid: 1795d3a805e458897bf23eb91a5fe29b, type: 3}
 --- !u!65 &8901483072193960885
 BoxCollider:
   m_ObjectHideFlags: 0

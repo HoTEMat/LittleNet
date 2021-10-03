@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 class GridTile : MonoBehaviour {
     [SerializeField] private Sprite WhiteSprite;
+    [SerializeField] private GameObject PortBackgroundPrefab;
     private SpriteRenderer spriteRenderer;
 
     public event Action<GridTile> OnClicked;
@@ -53,6 +54,23 @@ class GridTile : MonoBehaviour {
     public void ShowSprite(Sprite sprite) {
         spriteRenderer.sprite = sprite;
         spriteRenderer.color = Color.white;
+    }
+
+    public void MarkPort(IPort port) {
+        if (port == null)
+            return;
+
+        var backgroundObj = Instantiate(PortBackgroundPrefab, transform);
+        var rt = backgroundObj.GetComponent<RectTransform>();
+
+        rt.transform.localPosition = new Vector3(0, 0, 1);
+
+        float c = 1.06f;
+        rt.localScale = new Vector3(c, c, c);
+
+        if (port is InputPort) backgroundObj.GetComponent<SpriteRenderer>().color = Color.white;
+        else if (port is OutputPort) backgroundObj.GetComponent<SpriteRenderer>().color = Color.white;
+        else backgroundObj.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     private void OnMouseDown() {
