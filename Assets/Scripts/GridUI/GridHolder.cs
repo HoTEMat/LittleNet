@@ -14,8 +14,8 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     public EventSystem EventSystem;
     public PlayManager PlayManager;
 
-    private int playSpeed = 10;
-    private int playCount = 0; // TODO: do interfacu
+    private int playSpeed = 1;
+    private int playCount = 0;
 
     public bool ShowTileTextures { get; set; }
 
