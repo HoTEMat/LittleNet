@@ -10,6 +10,10 @@ class ToolPicker : MonoBehaviour {
     public RectTransform backgroundPosition;
     public RectTransform backgroundBorderPosition;
     public GridHolder GridHolder;
+
+    public GameObject IterationCounter;
+    private Text IterationText;
+    private RectTransform IterationCounterTransform;
     
     public GameObject toolPickerBackgroundPrefab;
     private GameObject toolPickerBackground;
@@ -20,6 +24,9 @@ class ToolPicker : MonoBehaviour {
 
     private void Start() {
         toolPickerBackground = Instantiate(toolPickerBackgroundPrefab, transform);
+
+        IterationText = IterationCounter.GetComponent<Text>();
+        IterationCounterTransform = IterationCounter.GetComponent<RectTransform>();
         
         foreach (State state in Enum.GetValues(typeof(State))) {
             if (!state.IsPlaceable())
@@ -68,14 +75,23 @@ class ToolPicker : MonoBehaviour {
         
         float c = 0.085f;
         float d = 1.1f;
+
+        IterationText.text = $"Step {GridHolder.Level.GetIteration}";
         
-        backgroundPosition.sizeDelta = new Vector2(width / d, height * c / d);
+        backgroundPosition.sizeDelta = new Vector2(0, height * c / d);
         backgroundPosition.anchoredPosition = new Vector2(0, -height * c / 2);
         
-        backgroundBorderPosition.sizeDelta = new Vector2(width * d, height * c);
+        backgroundBorderPosition.sizeDelta = new Vector2(0, height * c);
         backgroundBorderPosition.anchoredPosition = new Vector2(0, -height * c / 2);
         
-        float buttonSize = backgroundPosition.sizeDelta.y * 0.7f;
+        
+        float buttonSize = backgroundPosition.sizeDelta.y * 0.8f;
+        IterationCounterTransform.sizeDelta = new Vector2(0, height * c / d * 0.8f);
+        
+        float rightOffset = -(backgroundPosition.anchoredPosition.y + buttonSize) / 2 * 1.3f;
+        IterationCounterTransform.anchoredPosition = new Vector2(-rightOffset, -height * c / 2);
+        
+        buttonSize = backgroundPosition.sizeDelta.y * 0.7f;
         float buttonSpacing = buttonSize * 0.25f;
 
         int buttonCount = buttonPositions.Count;
