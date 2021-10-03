@@ -11,6 +11,11 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     public GameObject GridLinePrefab;
     public ToolPicker ToolPicker;
     public EventSystem EventSystem;
+    public PlayManager PlayManager;
+
+    private int playSpeed = 10;
+    private int playCount = 0;
+    
     
     public bool ShowTileTextures { get; set; }
 
@@ -50,9 +55,21 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     private void Update() {
         UpdateGridTiles();
 
+        if (PlayManager.State == PlayState.Playing) {
+            playCount++;
+
+            if (playCount % playSpeed == 0)
+                Level.DoIteration();
+        }
+        
+        if (PlayManager.State == PlayState.Stopped && Level.GetIteration != 0)
+            Level.Reset();
+        
         if (Input.GetKeyDown(KeyCode.Space)) {
             Level.DoIteration();
+            PlayManager.State = PlayState.Paused;
         }
+        
         if (!Input.GetMouseButton(0)) {
             activeTool = null;
         }

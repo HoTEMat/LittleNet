@@ -1,22 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum PlayState {
+    Stopped,
+    Paused,
+    Playing
+}
+
 public class PlayManager : MonoBehaviour {
-    public bool Playing { get; private set; }
+    public PlayState State { get; set; }
+    
     public Camera camera;
     public RectTransform backgroundPosition;
 
     [SerializeField] private Button buttonPrefab;
 
     private Button playPauseButton;
-    private Button disableButton;
+    private Button stopButton;
 
     private void Start() {
         playPauseButton = Instantiate(buttonPrefab, transform);
         playPauseButton.onClick.AddListener(PlayPausePressed);
         
-        disableButton = Instantiate(buttonPrefab, transform);
-        disableButton.onClick.AddListener(PlayPausePressed);
+        stopButton = Instantiate(buttonPrefab, transform);
+        stopButton.onClick.AddListener(StopPressed);
     }
 
     private void Update() {
@@ -28,17 +35,30 @@ public class PlayManager : MonoBehaviour {
 
         RectTransform buttonTransform = playPauseButton.GetComponent<RectTransform>();
         buttonTransform.sizeDelta = new Vector2(buttonSize, buttonSize);
-        buttonTransform.anchoredPosition = new Vector2(width - backgroundPosition.anchoredPosition.y - buttonSize / 2, backgroundPosition.anchoredPosition.y);
+        buttonTransform.anchoredPosition = new Vector2(width - backgroundPosition.anchoredPosition.y - buttonSize * (3/2f), backgroundPosition.anchoredPosition.y);
         
-        buttonTransform = disableButton.GetComponent<RectTransform>();
+        buttonTransform = stopButton.GetComponent<RectTransform>();
         buttonTransform.sizeDelta = new Vector2(buttonSize, buttonSize);
-        buttonTransform.anchoredPosition = new Vector2(width - backgroundPosition.anchoredPosition.y - buttonSize * (3/2) - buttonSpacing , backgroundPosition.anchoredPosition.y);
+        buttonTransform.anchoredPosition = new Vector2(width - backgroundPosition.anchoredPosition.y - buttonSize * (5/2f) - buttonSpacing, backgroundPosition.anchoredPosition.y);
+
+        if (State == PlayState.Stopped)
+            stopButton.interactable = false;
     }
 
     private void PlayPausePressed() {
+        switch (State) {
+            case PlayState.Paused:
+            case PlayState.Stopped:
+                State = PlayState.Playing;
+                stopButton.interactable = true;
+                break;
+            case PlayState.Playing:
+                State = PlayState.Paused;
+                break;
+        }
     }
 
-    private void DisablePressed() {
-        
+    private void StopPressed() {
+        State = PlayState.Stopped;
     }
 }
