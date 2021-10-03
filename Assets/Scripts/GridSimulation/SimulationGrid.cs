@@ -11,7 +11,6 @@ class SimulationGrid {
 
     private Dictionary<(int x, int y), State> grid = new Dictionary<(int x, int y), State>();
     private Dictionary<(int x, int y), State> newGrid;
-    //private Dictionary<(int x, int y), State> initialGrid;
 
     private List<GridContainer> containers = new List<GridContainer>();
 
@@ -23,9 +22,6 @@ class SimulationGrid {
     /// <summary>
     /// Create a simulation grid with an existing prototype
     /// </summary>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="prototype"></param>
     public SimulationGrid(int width, int height, GatePrototype prototype) {
         Width = width;
         Height = height;
@@ -35,9 +31,6 @@ class SimulationGrid {
     /// <summary>
     /// Create a simulation grid, and a new unique prototype.
     /// </summary>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="prototype"></param>
     public SimulationGrid(int width, int height, string prototypeName) {
         Width = width;
         Height = height;
@@ -66,6 +59,7 @@ class SimulationGrid {
 
     public void AddPort(IPort port) {
         ports[(port.InnerX, port.InnerY)] = port;
+        Set(port.InnerX, port.InnerY, State.WireOff);
     }
 
     /// <summary>
@@ -104,7 +98,6 @@ class SimulationGrid {
     public void DoIteration() {
         if (!CanSimulate) throw new InvalidOperationException();
 
-        // when starting the simulation, save the initial grid
         newGrid = new Dictionary<(int x, int y), State>();
 
         foreach (var position in grid.Keys.Concat(ports.Keys)) {

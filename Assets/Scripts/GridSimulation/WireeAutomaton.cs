@@ -14,7 +14,7 @@ class WireeAutomaton : IAutomaton {
         var key = (up, down, left, right, center);
 
         if (cache.TryGetValue(key, out var cachedState)) {
-            return cachedState;
+            //return cachedState;
         }
 
         var computedState = ComputeNextState(up, down, left, right, center);
@@ -40,8 +40,8 @@ class WireeAutomaton : IAutomaton {
                         ? State.WireOn
                         : center;
             case State.WireOn:
-                return vertical.Any(v => v.DeadVertical())
-                    || horizontal.Any(h => h.DeadHorizontal())
+                return vertical.Any(v => v.DeadVertical() || v == State.NotDead)
+                    || horizontal.Any(h => h.DeadHorizontal() || h == State.NotDead)
                         ? State.WireDead
                         : center;
             case State.WireDead: return State.WireOff;
@@ -54,7 +54,7 @@ class WireeAutomaton : IAutomaton {
                     : State.LampOff;
             case State.LampOn:
                 return vertical.All(v => !v.EmitsVertical())
-                    || horizontal.All(h => !h.EmitsHorizontal())
+                    && horizontal.All(h => !h.EmitsHorizontal())
                     ? State.LampDead
                     : State.LampOn;
             case State.LampDead: return State.LampOff;
@@ -81,11 +81,11 @@ class WireeAutomaton : IAutomaton {
                 center = center.CrossSetOff(true);
             } else if (center.EmitsHorizontal()) {
                 // -- is on
-                if (horizontal.Any(h => h.DeadHorizontal()))
+                if (horizontal.Any(h => h.DeadHorizontal() || h == State.NotDead))
                     center = center.CrossSetDead(true);
             } else {
                 // -- is off
-                if (horizontal.Any(h => h.EmitsHorizontal()))
+                if (horizontal.Any(h => h.EmitsHorizontal() || h == State.NotOn))
                     center = center.CrossSetOn(true);
             }
         }
@@ -96,11 +96,11 @@ class WireeAutomaton : IAutomaton {
                 center = center.CrossSetOff(false);
             } else if (center.EmitsVertical()) {
                 // | is on
-                if (vertical.Any(v => v.DeadVertical()))
+                if (vertical.Any(v => v.DeadVertical() || v == State.NotDead))
                     center = center.CrossSetDead(false);
             } else {
                 // | is off
-                if (vertical.Any(v => v.EmitsVertical()))
+                if (vertical.Any(v => v.EmitsVertical() || v == State.NotOn))
                     center = center.CrossSetOn(false);
             }
         }
@@ -113,8 +113,8 @@ class WireeAutomaton : IAutomaton {
 
 static class StateEx {
 
-    public static State AsWire(this bool b) {
-        return b ? State.WireOn : State.WireOff;
+    public static State AsWire(this bool b, State prev = State.WireOn) {
+        return b ? State.WireOn : (prev == State.WireOn ? State.WireDead : State.WireOff);
     }
 
     public static bool IsPlaceable(this State state) {

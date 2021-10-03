@@ -18,6 +18,10 @@ public class PlayManager : MonoBehaviour {
     private Button playPauseButton;
     private Button stopButton;
 
+    public Sprite playSprite;
+    public Sprite stopSprite;
+    public Sprite pauseSprite;
+
     private void Start() {
         playPauseButton = Instantiate(buttonPrefab, transform);
         playPauseButton.onClick.AddListener(PlayPausePressed);
@@ -30,19 +34,29 @@ public class PlayManager : MonoBehaviour {
         float width = camera.scaledPixelWidth;
         float height = camera.scaledPixelHeight;
         
-        float buttonSize = backgroundPosition.sizeDelta.y * 0.7f;
-        float buttonSpacing = buttonSize * 0.25f;
+        float buttonSize = backgroundPosition.sizeDelta.y * 0.85f;
+        float buttonSpacing = buttonSize * 0.1f;
 
+        float rightOffset = -(backgroundPosition.anchoredPosition.y + buttonSize) / 2;
+        
         RectTransform buttonTransform = playPauseButton.GetComponent<RectTransform>();
         buttonTransform.sizeDelta = new Vector2(buttonSize, buttonSize);
-        buttonTransform.anchoredPosition = new Vector2(width - backgroundPosition.anchoredPosition.y - buttonSize * (3/2f), backgroundPosition.anchoredPosition.y);
+        buttonTransform.anchoredPosition = new Vector2(width - buttonSize * (1/2f) + rightOffset, backgroundPosition.anchoredPosition.y);
         
         buttonTransform = stopButton.GetComponent<RectTransform>();
         buttonTransform.sizeDelta = new Vector2(buttonSize, buttonSize);
-        buttonTransform.anchoredPosition = new Vector2(width - backgroundPosition.anchoredPosition.y - buttonSize * (5/2f) - buttonSpacing, backgroundPosition.anchoredPosition.y);
+        buttonTransform.anchoredPosition = new Vector2(width - buttonSize * (3/2f) + rightOffset - buttonSpacing, backgroundPosition.anchoredPosition.y);
 
-        if (State == PlayState.Stopped)
-            stopButton.interactable = false;
+        stopButton.interactable = State != PlayState.Stopped;
+
+        playPauseButton.GetComponent<Image>().sprite = State switch {
+            PlayState.Paused => playSprite,
+            PlayState.Stopped => playSprite,
+            PlayState.Playing => pauseSprite,
+            _ => playPauseButton.GetComponent<Image>().sprite
+        };
+
+        stopButton.GetComponent<Image>().sprite = stopSprite;
     }
 
     private void PlayPausePressed() {
@@ -50,7 +64,6 @@ public class PlayManager : MonoBehaviour {
             case PlayState.Paused:
             case PlayState.Stopped:
                 State = PlayState.Playing;
-                stopButton.interactable = true;
                 break;
             case PlayState.Playing:
                 State = PlayState.Paused;

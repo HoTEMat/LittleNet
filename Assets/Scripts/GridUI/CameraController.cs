@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(GridHolder))]
-class CameraController : MonoBehaviour
-{
+class CameraController : MonoBehaviour {
     public Camera Camera;
     private GridHolder gridHolder;
 
@@ -41,7 +40,7 @@ class CameraController : MonoBehaviour
     }
 
     // One world unit corresponds to one tile.
-    private float MaxCameraSize => Mathf.Min(gridHolder.Level.Grid.Height, gridHolder.Level.Grid.Width) / 2;
+    private float MaxCameraSize => Mathf.Min(gridHolder.Level.Grid.Height, gridHolder.Level.Grid.Width);
     private float MinCameraSize => 2.0f;
 
     private void HandleZooming() {
@@ -50,9 +49,11 @@ class CameraController : MonoBehaviour
         Vector2 zoomCenter = Input.mousePosition;
         if (scrollDelta == 0)
             return;
+        if (!Camera.pixelRect.Contains(Input.mousePosition))
+            return;
         float zoomAmount = scrollDelta > 0 ? (1 / mouseScrollSpeed) : mouseScrollSpeed;
 
-        float newCamSize = Mathf.Max(MinCameraSize, 
+        float newCamSize = Mathf.Max(MinCameraSize,
             Mathf.Min(Camera.orthographicSize * zoomAmount, MaxCameraSize)
         );
         var oldWorldCenter = Camera.ScreenToWorldPoint(zoomCenter);

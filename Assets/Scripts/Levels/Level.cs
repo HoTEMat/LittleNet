@@ -48,6 +48,8 @@ class Level : ILevel {
             Grid = Grid.Clone();
         }
 
+        iteration++;
+
         Grid.DoIteration();
         Grid.DoSwap();
 
