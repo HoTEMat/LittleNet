@@ -49,17 +49,17 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
     private void Start() {
         Level = Levels.CrossLevel();
-        //TODORemoveThis();
+        TODORemoveThis();
         InitGrid(Level.Grid);
     }
 
-    //private void TODORemoveThis() {
-    //    var innerGrid = Levels.CrossLevel().Grid;
-    //    Debug.Log(innerGrid.GetPorts().Count());
-    //    var c = new GridContainer(0, 0, innerGrid, Rotation.By0);
-    //    Debug.Log(c.OuterWidth);
-    //    Level.Grid.InsertContainer(c);
-    //}
+    private void TODORemoveThis() {
+        var innerGrid = Levels.CrossLevel().Grid;
+        Debug.Log(innerGrid.GetPorts().Count());
+        var c = new GridContainer(0, 0, innerGrid, Rotation.By0);
+        Debug.Log(c.OuterWidth);
+        Level.Grid.InsertContainer(c);
+    }
 
     private void Update() {
         UpdateGridTiles();
@@ -170,8 +170,13 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
     }
 
     public Vector3 GridToWorldPosition(int gridX, int gridY, float z) {
-        (float w, float h) = GetTileSize();
-        return new Vector3((w + gridLineWidth) * gridX, -(h + gridLineWidth) * gridY, z);
+        (float tw, float th) = GetTileSize();
+        return new Vector3((tw + gridLineWidth) * gridX, -(th + gridLineWidth) * gridY, z);
+    }
+
+    public (int gridX, int gridY) WorldToGridPosition(Vector3 worldPos) {
+        (float tw, float th) = GetTileSize();
+        return ((int)(worldPos.x / (tw + gridLineWidth)), -(int)(worldPos.y / (th + gridLineWidth)));
     }
 
 

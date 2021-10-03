@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(GridHolder))]
-public class ContainerMovement : MonoBehaviour
+class ContainerMovement : MonoBehaviour
 {
     [SerializeField] private Sprite WhiteSprite;
     [SerializeField] private Color ContainerColor;
+    [SerializeField] private Camera Camera;
 
     private GridHolder grid;
-    private List<GameObject> containers;
+    private List<Container> containers;
     private bool lateStarted;
 
     private void Start() {
@@ -18,11 +20,17 @@ public class ContainerMovement : MonoBehaviour
 
     // Needs to be executed after GridHolder's Start().
     private void LateStart() {
-        containers = new List<GameObject>();
+        containers = new List<Container>();
+        var clickHandler = new Action<Container>(HandleContainerClicked);
+        var dragHandler = new Action<Container>(HandleContainerDragged);
         foreach (GridContainer c in grid.Level.Grid.GetContainers()) {
-            GameObject containerObj = InstantiateContainer(c.X, c.Y, c.OuterWidth, c.OuterHeight);
-            containers.Add(containerObj);
+            Container container = InstantiateContainer(c.OuterWidth, c.OuterHeight);
+            container.OnClicked += clickHandler;
+            container.OnDragged += dragHandler;
+            container.GridContainer = c;
+            containers.Add(container);
         }
+        UpdateContainersPositions();
         lateStarted = true;
     }
 
@@ -30,9 +38,17 @@ public class ContainerMovement : MonoBehaviour
         if (!lateStarted) {
             LateStart();
         }
+
+        UpdateContainersPositions();
     }
 
-    private GameObject InstantiateContainer(int gridX, int gridY, float width, float height) {
+    private void UpdateContainersPositions() {
+        foreach (Container c in containers) {
+            c.SetTopLeft(grid.GridToWorldPosition(c.GridContainer.X, c.GridContainer.Y, -1));
+        }
+    }
+
+    private Container InstantiateContainer(float width, float height) {
         var container = new GameObject();
         container.name = "Container";
         container.transform.parent = transform;
@@ -42,9 +58,37 @@ public class ContainerMovement : MonoBehaviour
         sr.color = ContainerColor;
         sr.sprite = WhiteSprite;
 
-        Container containerController = container.AddComponent<Container>();
-        containerController.SetTopLeft(grid.GridToWorldPosition(gridX, gridY, -1));
+        BoxCollider bc = container.AddComponent<BoxCollider>();
+        bc.isTrigger = true;
 
-        return container;
+        Container containerController = container.AddComponent<Container>();
+
+        return containerController;
+    }
+
+    private Container draggedContainer;
+    private Vector3 draggingMouseOffset;
+    private bool dragging => draggedContainer != null;
+
+    private void HandleContainerClicked(Container c) {
+        Vector3 worldMousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 containerWorldPos = grid.GridToWorldPosition(c.GridContainer.X, c.GridContainer.Y, 0);
+        draggedContainer = c;
+        draggingMouseOffset = worldMousePos - containerWorldPos;
+    }
+    private void HandleContainerDragged(Container c) {
+        if (!dragging)
+            return;
+
+        Vector3 worldMousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 containerTargetWorldPos = worldMousePos - draggingMouseOffset;
+        (int containerTargetX, int containerTargetY) = grid.WorldToGridPosition(containerTargetWorldPos);
+
+        if (c.GridContainer.X != containerTargetX || c.GridContainer.Y != containerTargetY) {
+            grid.Level.Grid.RemoveContainer(c.GridContainer);
+            c.GridContainer.X = containerTargetX;
+            c.GridContainer.Y = containerTargetY;
+            grid.Level.Grid.InsertContainer(c.GridContainer);
+        }
     }
 }
