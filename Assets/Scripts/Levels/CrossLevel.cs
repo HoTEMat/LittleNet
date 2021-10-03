@@ -16,12 +16,16 @@ static partial class Levels {
 
 class CrossLevelValidator : CalendarValidator {
 
-    int caseN = 0;
+    int testCaseN = 0;
+    const int totalTestCases = 16;
+
+    const int testInterval = 100;
+
     static List<(bool in0, bool in1, bool out0, bool out1)> cases = new List<(bool, bool, bool, bool)> {
         (false, false, false, false),
         (true, false, false, true),
         (false, true, true, false),
-        (false, false, false, false),
+        (true, true, true, true),
     };
 
     public override int InputCount => 2;
@@ -29,31 +33,39 @@ class CrossLevelValidator : CalendarValidator {
 
     public override void Reset() {
         base.Reset();
-        caseN = 0;
+        testCaseN = 0;
     }
 
-
-    public override State[] GetInputStates() {
-        var c = cases[caseN];
+    public override State[] GetInputs() {
+        var c = cases[testCaseN];
         return new State[] { c.in0.AsWire(), c.in1.AsWire() };
     }
 
     public override void MoveToNextInputState() {
-        if (Iterations % 200 == 0) {
-             if (caseN < cases.Count) {
-                Expect(100, outputs => {
-                    var c = cases[caseN++];
-                    if ((outputs[0] == State.WireOn) == c.out0 && (outputs[1] == State.WireOn) == c.out1) { 
-                        return ILevelState.Nothing;
-                    }
-                    return ILevelState.Failure;
-                }
-                );
-            } else {
-                Succeed();
-            }
+
+        if (Iterations == 0) {
+            RegisterNextTest();
         }
 
         base.MoveToNextInputState();
+    }
+
+    private void RegisterNextTest() {
+
+        Expect(testInterval, outputs => {
+            var data = cases[testCaseN];
+            bool ok = data.out0 == outputs[0] && data.out1 == outputs[1];
+
+            testCaseN++;
+            bool lastTest = testCaseN >= totalTestCases;
+
+            if (lastTest) {
+                return ok ? ILevelState.Success : ILevelState.Failure;
+            } else {
+                RegisterNextTest();
+                return ok ? ILevelState.Nothing : ILevelState.Failure;
+            }
+
+        });
     }
 }
