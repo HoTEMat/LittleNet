@@ -23,10 +23,12 @@ class ContainerMovement : MonoBehaviour
         containers = new List<Container>();
         var clickHandler = new Action<Container>(HandleContainerClicked);
         var dragHandler = new Action<Container>(HandleContainerDragged);
+        var mouseUpHandler = new Action<Container>(HandleMouseUp);
         foreach (GridContainer c in grid.Level.Grid.GetContainers()) {
             Container container = InstantiateContainer(c.OuterWidth, c.OuterHeight);
             container.OnClicked += clickHandler;
             container.OnDragged += dragHandler;
+            container.OnMouseRaised += mouseUpHandler;
             container.GridContainer = c;
             containers.Add(container);
         }
@@ -82,13 +84,22 @@ class ContainerMovement : MonoBehaviour
 
         Vector3 worldMousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
         Vector3 containerTargetWorldPos = worldMousePos - draggingMouseOffset;
-        (int containerTargetX, int containerTargetY) = grid.WorldToGridPosition(containerTargetWorldPos);
 
+        Vector3 containerWorldPos = grid.GridToWorldPosition(c.GridContainer.X, c.GridContainer.Y, 0);
+        if ((containerWorldPos - containerTargetWorldPos).magnitude < 0.1)
+            return;
+
+        (int containerTargetX, int containerTargetY) = grid.WorldToGridPosition(containerTargetWorldPos);
         if (c.GridContainer.X != containerTargetX || c.GridContainer.Y != containerTargetY) {
             grid.Level.Grid.RemoveContainer(c.GridContainer);
             c.GridContainer.X = containerTargetX;
             c.GridContainer.Y = containerTargetY;
             grid.Level.Grid.InsertContainer(c.GridContainer);
         }
+    }
+
+    private void HandleMouseUp(Container c) {
+        draggedContainer = null;
+        draggingMouseOffset = Vector3.zero; // for determinism
     }
 }

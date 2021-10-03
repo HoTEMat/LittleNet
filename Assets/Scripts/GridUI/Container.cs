@@ -7,6 +7,7 @@ class Container : MonoBehaviour
 {
     public event Action<Container> OnClicked;
     public event Action<Container> OnDragged;
+    public event Action<Container> OnMouseRaised;
     public GridContainer GridContainer { get; set; }
 
     public void SetTopLeft(Vector3 topLeft) {
@@ -24,6 +25,6 @@ class Container : MonoBehaviour
     }
 
     private void OnMouseUp() {
-        Debug.Log("up");
+        OnMouseRaised?.Invoke(this);
     }
 }

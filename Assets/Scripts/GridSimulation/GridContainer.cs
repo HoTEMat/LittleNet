@@ -51,8 +51,8 @@ class GridContainer : ICloneable<GridContainer> {
         int dMin = lOffset + rOffset + (d.Count - 1) * 2 + 1;
 
         // determine the dimensions so that both sides fit
-        OuterWidth = Math.Max(uMin, dMin);
-        OuterHeight = Math.Max(lMin, rMin);
+        OuterWidth = Math.Max(3, Math.Max(uMin, dMin));
+        OuterHeight = Math.Max(3, Math.Max(lMin, rMin));
 
         // place the corner ports
         if (lu != null) relativePortPlacement[(0, 0)] = lu;

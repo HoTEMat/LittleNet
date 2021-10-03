@@ -49,17 +49,15 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
 
     private void Start() {
         Level = Levels.CrossLevel();
-        //TODORemoveThis();
+        TODORemoveThis();
         InitGrid(Level.Grid);
     }
 
-    //private void TODORemoveThis() {
-    //    var innerGrid = Levels.CrossLevel().Grid;
-    //    Debug.Log(innerGrid.GetPorts().Count());
-    //    var c = new GridContainer(0, 0, innerGrid, Rotation.By0);
-    //    Debug.Log(c.OuterWidth);
-    //    Level.Grid.InsertContainer(c);
-    //}
+    private void TODORemoveThis() {
+        var innerGrid = Levels.CrossLevel().Grid;
+        var c = new GridContainer(0, 0, innerGrid, Rotation.By0);
+        Level.Grid.InsertContainer(c);
+    }
 
     private void Update() {
         UpdateGridTiles();
