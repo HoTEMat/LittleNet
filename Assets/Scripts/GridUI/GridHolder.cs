@@ -86,7 +86,7 @@ class GridHolder : MonoBehaviour, ISerializationCallbackReceiver {
                     else if (port is OutputPort) background.GetComponent<SpriteRenderer>().color = Color.red;
                     else background.GetComponent<SpriteRenderer>().color = Color.blue;
 
-                    position.transform.position = tile.transform.position;
+                    position.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, 1);
                     
                     float c = 1.15f;
                     position.localScale = new Vector3(c, c, c);
