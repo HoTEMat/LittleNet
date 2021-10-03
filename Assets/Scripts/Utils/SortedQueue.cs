@@ -18,6 +18,10 @@ class SortedQueue<TPriority, TElement> : IEnumerable<TElement> {
         queue.Enqueue(element);
     }
 
+    public void Clear() {
+        queues.Clear();
+    }
+
     public TElement Dequeue() {
         if (Count == 0) throw new InvalidOperationException();
 

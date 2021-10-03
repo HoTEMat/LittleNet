@@ -63,6 +63,9 @@ interface ILevelValidator {
 }
 
 interface ILevel {
+    string Name { get; }
+    string Description { get; }
+    
     SimulationGrid Grid { get; }
     ILevelValidator Validator { get; }
 

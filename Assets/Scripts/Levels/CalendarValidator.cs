@@ -1,6 +1,8 @@
-﻿abstract class CalendarValidator : ILevelValidator {
+﻿using System.Linq;
 
-    protected delegate ILevelState DelayedValidator(State[] outputs);
+abstract class CalendarValidator : ILevelValidator {
+
+    protected delegate ILevelState DelayedValidator(bool[] outputs);
 
     SortedQueue<int, DelayedValidator> validators = new SortedQueue<int, DelayedValidator>();
 
@@ -8,7 +10,11 @@
     public abstract int OutputCount { get; }
     public int Iterations { get; private set; }
 
-    public abstract State[] GetInputStates();
+    public abstract bool[] GetInputs();
+
+    public State[] GetInputStates() {
+        return GetInputs().Select(b => b ? State.WireOn : State.WireDead).ToArray();
+    }
 
     public virtual void MoveToNextInputState() {
         Iterations++;
@@ -16,6 +22,7 @@
 
     public virtual void Reset() {
         Iterations = 0;
+        validators.Clear();
     }
 
     protected void Expect(int after, DelayedValidator validator) {
@@ -33,7 +40,7 @@
 
         while (validators.Count != 0 && Iterations >= validators.FirstKey) {
             var validator = validators.Dequeue();
-            var result = validator.Invoke(outputs);
+            var result = validator.Invoke(outputs.Select(v => v == State.WireOn).ToArray());
             if (result != ILevelState.Nothing) {
                 return result;
             }

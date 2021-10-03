@@ -4,7 +4,7 @@ static partial class Levels {
         var validator = new NotValidator();
         int size = 10;
 
-        var level = new Level(validator, size, size);
+        var level = new Level(validator, size, size, "Not Level", "A level that's not!");
         return level;
     }
 }

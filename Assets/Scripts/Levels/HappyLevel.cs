@@ -4,7 +4,7 @@ static partial class Levels {
         var validator = new HappyValidator();
         int size = 10;
 
-        var level = new Level(validator, size, size);
+        var level = new Level(validator, size, size, "Happy Level", "A very happy level!");
         return level;
     }
 }

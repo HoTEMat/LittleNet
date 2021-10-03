@@ -75,6 +75,8 @@ class ToolPicker : MonoBehaviour {
         
         float c = 0.085f;
         float d = 1.1f;
+
+        IterationText.text = $"Step {GridHolder.Level.GetIteration}";
         
         backgroundPosition.sizeDelta = new Vector2(0, height * c / d);
         backgroundPosition.anchoredPosition = new Vector2(0, -height * c / 2);
@@ -82,11 +84,11 @@ class ToolPicker : MonoBehaviour {
         backgroundBorderPosition.sizeDelta = new Vector2(0, height * c);
         backgroundBorderPosition.anchoredPosition = new Vector2(0, -height * c / 2);
         
-        IterationCounterTransform.sizeDelta = new Vector2(0, height * c / d);
         
-        float buttonSize = backgroundPosition.sizeDelta.y * 0.85f;
+        float buttonSize = backgroundPosition.sizeDelta.y * 0.8f;
+        IterationCounterTransform.sizeDelta = new Vector2(0, height * c / d * 0.8f);
         
-        float rightOffset = -(backgroundPosition.anchoredPosition.y + buttonSize) / 2;
+        float rightOffset = -(backgroundPosition.anchoredPosition.y + buttonSize) / 2 * 1.3f;
         IterationCounterTransform.anchoredPosition = new Vector2(-rightOffset, -height * c / 2);
         
         buttonSize = backgroundPosition.sizeDelta.y * 0.7f;
