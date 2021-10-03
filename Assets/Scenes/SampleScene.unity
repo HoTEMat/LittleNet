@@ -328,7 +328,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
+  m_BackGroundColor: {r: 0, g: 0.8867924, b: 0.72875017, a: 0.7647059}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -508,6 +508,9 @@ MonoBehaviour:
   camera: {fileID: 519420031}
   backgroundPosition: {fileID: 1620360249}
   buttonPrefab: {fileID: 3110492723994685975, guid: 745c9e37568c9514fba0f4ca53ffc8b6, type: 3}
+  playSprite: {fileID: 21300000, guid: 4771a53a8e1a8bcf2a08883fb01b0ba4, type: 3}
+  stopSprite: {fileID: 21300000, guid: e9ee22933bfbca00494a097b44367687, type: 3}
+  pauseSprite: {fileID: 21300000, guid: 27e07e288ef524d4c91e730b6be14791, type: 3}
 --- !u!1 &1620360248
 GameObject:
   m_ObjectHideFlags: 0
