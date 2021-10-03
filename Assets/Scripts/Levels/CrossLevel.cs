@@ -36,9 +36,9 @@ class CrossLevelValidator : CalendarValidator {
         testCaseN = 0;
     }
 
-    public override State[] GetInputs() {
+    public override bool[] GetInputs() {
         var c = cases[testCaseN];
-        return new State[] { c.in0.AsWire(), c.in1.AsWire() };
+        return new[]{ c.in0, c.in1 };
     }
 
     public override void MoveToNextInputState() {
